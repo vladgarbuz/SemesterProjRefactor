@@ -108,24 +108,6 @@ Run unit tests:
 dotnet test
 ```
 
-Uploading to GitHub
---------------------
-If you are ready to share this repository on GitHub, follow these steps:
-
-```bash
-# Initialize git repository locally (if not already)
-git init
-git add .
-git commit -m "Initial commit"
-# Add a remote repository (set your GitHub remote)
-git remote add origin git@github.com:<YOUR_USERNAME>/<YOUR_REPOSITORY>.git
-git branch -M main
-git push -u origin main
-```
-
-Note: After pushing to GitHub, the GitHub Actions workflow in `.github/workflows/dotnet.yml` will run automatically on pushes and PRs.
-
----
 ## License
 
 Project Aurora is available under the MIT License. See the `LICENSE` file in the root of this repository.
