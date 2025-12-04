@@ -1,0 +1,14 @@
+### OOP Principles
+
+- [ ] **Encapsulation**: Bundle data and methods; restrict direct access using private fields and public methods
+- [ ] **Abstraction**: Expose only necessary features; hide implementation complexities
+- [ ] **Inheritance**: Create new classes based on existing classes
+- [ ] **Polymorphism**: Treat objects of different classes as common superclass objects
+
+### SOLID Principles
+
+- [ ] **Single Responsibility Principle (SRP)**: Each class should have one reason to change
+- [ ] **Open/Closed Principle (OCP)**: Open for extension, closed for modification
+- [ ] **Liskov Substitution Principle (LSP)**: Subclass objects should be replaceable with superclass objects
+- [ ] **Interface Segregation Principle (ISP)**: Don't force clients to depend on unused interfaces
+- [ ] **Dependency Inversion Principle (DIP)**: Depend on abstractions, not concrete implementations

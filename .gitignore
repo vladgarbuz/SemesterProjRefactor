@@ -1,0 +1,77 @@
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Build results
+[Dd]ebug*/
+[Rr]elease*/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+*/bin/
+*/obj/
+
+# Rider
+.idea/
+*.sln.iml
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# Mac
+.DS_Store
+
+# NuGet
+*.nupkg
+# The packages folder can be ignored because of PackageReference, restore packages during build
+**/packages/
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper*
+
+# unit test / coverage
+*.coverage
+*.coveragexml
+TestResults/
+
+# Logs
+*.log
+
+# User-specific files
+.env
+
+# Secrets
+secrets.json
+
+# Temporary files
+tmp/
+temp/
+
+# Generated files
+**/*.g.cs
+**/*.g.i.cs
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+
+# dotnet watch
+.dotnet.watch
+
+# Others
+*.db
+
+# Local deployment artifacts
+*.publish
+
+# publish output
+publish/
+
+# JetBrains Rider local history
+.idea/
