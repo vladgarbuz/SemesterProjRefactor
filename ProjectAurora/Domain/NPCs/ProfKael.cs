@@ -10,6 +10,10 @@ namespace ProjectAurora.Domain.NPCs
             {
                 state.MarkStep1Complete();
                 print("Prof. Kael: 'Great! You have the parts. Let's fix this.' (Step 1 Complete)");
+                // Remove used items
+                player.RemoveItem("anemometer");
+                player.RemoveItem("control board");
+                player.RemoveItem("power cables");
             }
             else if (player.HasItem("anemometer") && player.HasItem("control board") && player.HasItem("flimsy cables"))
             {

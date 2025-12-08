@@ -13,6 +13,9 @@ namespace ProjectAurora.Data.Rooms
             var name = item.Name.ToLower();
             if (name == "water hose")
             {
+                // Consumed when used
+                if (player.HasItem("Water Hose"))
+                    player.RemoveItem("Water Hose");
                 engine.Print("Temporary fix applied. Solar Desert saved (barely).");
                 state.SetSolarFixed();
                 engine.ReturnToHub();
@@ -26,6 +29,9 @@ namespace ProjectAurora.Data.Rooms
                     engine.Print("Robotic maintenance complete. Saved the Solar Desert!");
                     state.SetSolarFixed();
                     engine.ReturnToHub();
+                    // Consume parts when used
+                    if (player.HasItem("Robotic Parts 1")) player.RemoveItem("Robotic Parts 1");
+                    if (player.HasItem("Robotic Parts 2")) player.RemoveItem("Robotic Parts 2");
                 }
                 else
                 {

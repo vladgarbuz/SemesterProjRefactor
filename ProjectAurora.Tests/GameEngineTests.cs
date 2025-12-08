@@ -34,6 +34,21 @@ namespace ProjectAurora.Tests
         }
 
         [Fact]
+        public void UseItem_WrongPlace_PrintsMessage()
+        {
+            var engine = new GameEngine();
+            engine.ClearOutput();
+
+            // Give the player a lever but not at the Control Room
+            engine.Player.AddItem(new ProjectAurora.Data.Items.RepairItem("lever", "A heavy, stainless steel lever."));
+            engine.ClearOutput();
+            engine.UseItem("lever");
+            Assert.Contains("You can't use that here.", engine.OutputMessage);
+            // Lever remains in inventory
+            Assert.True(engine.Player.HasItem("lever"));
+        }
+
+        [Fact]
         public void SolarQuiz_Success_MovesToTentAndGivesKey_AutoLook()
         {
             var engine = new GameEngine();

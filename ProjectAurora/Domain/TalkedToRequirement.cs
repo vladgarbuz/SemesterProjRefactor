@@ -17,5 +17,10 @@ namespace ProjectAurora.Domain
             // Compatibility: check dynamic flag based on NPC name OR existing concrete property
             return state.GetFlag($"TalkedTo{_npcName}") || state.TalkedToLiora;
         }
+
+        public void OnEnter(Player player, GameState state, GameEngine engine)
+        {
+            // No action needed for talked-to requirements
+        }
     }
 }

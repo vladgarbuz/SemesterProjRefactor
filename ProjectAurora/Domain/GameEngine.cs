@@ -104,6 +104,9 @@ namespace ProjectAurora.Domain
                 }
             // The per-room OnEnter now handles special cases like quizzes, item pickups, and box visits.
             
+            // Call entry requirement's OnEnter to handle key consumption, etc.
+            room.EntryRequirement?.OnEnter(Player, State, this);
+            
             // Additional generic events are now handled by each Room's OnEnter
 
             return true;
@@ -120,8 +123,27 @@ namespace ProjectAurora.Domain
                 sb.AppendLine(string.Join(", ", Player.CurrentRoom.Items.Select(i => i.Name)));
             }
             
+            // For exits, display the cardinal directions and note locked status where applicable
             sb.Append("Exits: ");
             sb.AppendLine(string.Join(", ", Player.CurrentRoom.Exits.Keys));
+
+            // Show any locked/unlocked indications for exits that require a key
+            foreach (var kv in Player.CurrentRoom.Exits)
+            {
+                var direction = kv.Key;
+                var dest = kv.Value;
+                if (dest.EntryRequirement is ProjectAurora.Domain.KeyRequirement keyReq)
+                {
+                    if (keyReq.IsUnlocked)
+                    {
+                        sb.AppendLine($"The path {direction} to {dest.Name} is unlocked.");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"The path {direction} to {dest.Name} is locked.");
+                    }
+                }
+            }
 
             Print(sb.ToString());
         }
@@ -183,6 +205,9 @@ namespace ProjectAurora.Domain
                     return;
                 }
             }
+
+            // If we reach here, the item wasn't handled by the room and is not usable here
+            Print("You can't use that here.");
 
             // If not handled by the room, we could place general-use-item logic here. Most special cases are now handled by rooms.
         }

@@ -12,6 +12,11 @@ namespace ProjectAurora.Data.Rooms
             var itemName = item.Name.ToLower();
             if (itemName == "lever")
             {
+                // Use lever to repair; consume the lever as it's used
+                if (player.HasItem("lever"))
+                {
+                    player.RemoveItem("lever");
+                }
                 state.MarkLeverRepaired();
                 engine.Print("Lever repaired.");
                 return true;
@@ -22,6 +27,11 @@ namespace ProjectAurora.Data.Rooms
                 {
                     if (state.LeverRepaired)
                     {
+                        // Consume berries and pinecone
+                        if (player.HasItem("berries"))
+                            player.RemoveItem("berries");
+                        if (player.HasItem("pinecone"))
+                            player.RemoveItem("pinecone");
                         engine.Print("With the lever repaired and derusted, the dam is back to full power!");
                         state.MarkQteComplete();
                         return true;
@@ -34,6 +44,11 @@ namespace ProjectAurora.Data.Rooms
                                 bool success = engine.RunHydroQTE(qte);
                             if (success)
                             {
+                                // Berries and pinecone are consumed to make the acid
+                                if (player.HasItem("berries"))
+                                    player.RemoveItem("berries");
+                                if (player.HasItem("pinecone"))
+                                    player.RemoveItem("pinecone");
                                 state.MarkQteComplete();
                                 engine.Print("Hydroelectric Dam back to full power!");
                                 return true;

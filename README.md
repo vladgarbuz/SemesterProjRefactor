@@ -149,21 +149,26 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
     *   **Event**: Upon entry, a quiz is triggered (if not already completed).
         *   Question: "What happens if solar panels overheat?"
         *   Options: (1) More energy, (2) Less efficiency, (3) Catch fire.
-        *   Input `2`: Success. Player enters the tent. Adds **Desert Key** to inventory.
+        *   Input `2`: Success. Player enters the tent.
         *   Input `1` or `3`: Failure. Entry denied, player remains in Desert Hub.
+    *   **Item**: **Desert Key** - Must be taken manually using `take Desert Key`.
 4.  **Junkyard**
     *   `north` -> Desert Hub
     *   `west` -> Water Supplies
     *   `south` -> Scrapyard 1
     *   `east` -> Scrapyard 2
-6.  **Water Supplies**
-    *   **Event**: Entering adds **Water Hose** to inventory.
-    *   Description mentions finding a "Water Hose".
-7.  **Scrapyard 1**
-    *   **Event**: Entering adds **Robotic Parts 1** to inventory.
-8.  **Scrapyard 2**
-    *   **Event**: Entering adds **Robotic Parts 2** to inventory.
-9.  **Solar Panel Fields**
+    *   **Entry Requirement**: Requires **Desert Key**. The key is consumed on first entry and the door remains unlocked permanently.
+5.  **Water Supplies**
+    *   `east` -> Junkyard
+    *   **Item**: **Water Hose** - Visible in the room, must be taken manually using `take Water Hose`.
+6.  **Scrapyard 1**
+    *   `north` -> Junkyard
+    *   **Item**: **Robotic Parts 1** - Visible in the room, must be taken manually.
+7.  **Scrapyard 2**
+    *   `west` -> Junkyard
+    *   **Item**: **Robotic Parts 2** - Visible in the room, must be taken manually.
+    *   **Item**: **Robotic Parts 2** - Visible in the room, must be taken manually.
+8.  **Solar Panel Fields**
     *   **Event**: Upon entry, the player must choose a repair method.
         *   Input `1` (Water Hose):
             *   Condition: Requires **Water Hose** in inventory.
@@ -196,6 +201,7 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
 5.  **Tundra Forest**
     *   `east` -> Hydro Hub
     *   `north` -> Top of the Hill
+    *   **Description**: "You have entered the Tundra Forest. Towering trees extend in every direction. On the ground you notice a few pinecones and a nearby bush with ripe berries. Be careful wandering — it's easy to get lost here."
     *   **Item**: `berries`.
         *   Action: `take berries` -> Adds 'berries' to inventory.
     *   **Item**: `pinecone`.
@@ -222,7 +228,7 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
 *   **Trigger**: Using berries/pinecone in Control Room without repairing the lever.
 *   **Mechanic**:
     *   The game displays a random key from: `A, S, D, J, K, L`.
-    *   The player has **1000ms (1 second)** to press the correct key.
+    *   The player has **3000ms (3 seconds)** to press the correct key.
     *   This repeats **5 times**.
 *   **Win Condition**: 5 successful presses.
     *   Result: "Hydroelectric Dam back to full power". Sets `qteComplete = true`.
@@ -370,20 +376,20 @@ To support the architecture, state is distributed to relevant objects:
 *   **Aurora Control Hub**: "You are in the Aurora Control Hub, the heart of the last renewable energy initiative. The air hums with faint backup power. Screens flicker, showing maps of four darkened regions. A workbench lies in the corner with scattered tools."
 *   **Solar Desert**: "After walking for hours you find yourself in a desolate land. The desert stretches before you. Towers of sand cover the solar field. Heat shimmers across the horizon. You find a small hub that looks like it could have life(west)"
 *   **Desert Hub**: "You notice a map in front of the hub with the areas in the desert: Maintenance tent (west), Aurora Hub (east), Solar panel field (north), Junkyard (south). You decide to enter and there you find Dr. Liora Sunvale. She welcomes you and is ready to answer your questions. (talk)"
-*   **Maintenance Tent**: "You approach the maintenance tent. Before going in, the scientist guarding the tent asks you a question: 'What happens if solar panels overheat?' Your options are: (1) More energy, (2) Less efficiency, (3) Catch fire. Inside the tent is a wooden box labeled 'Junkyard'."
+*   **Maintenance Tent**: "You are inside the maintenance tent. Various tools are scattered about. In the corner sits a wooden box labeled 'Junkyard'."
 *   **Solar Panel Fields**: "You find yourself in the Solar Panel Fields and notice a lot of piles of sand. You try to dig into one and you find a solar panel. There are thousands of them. How will you clean up the piles: (1) Water Hose (unreliable) (2) Robotic maintenece"
 *   **Junkyard**: "You use the key to enter the Junkyard and there you find 3 exits labeled: Water Supplies (west), Scrapyard 1 (south), Scrapyard 2 (east)"
-*   **Scrapyard 1**: "Upon entering the scrapyard you find a huge pile of scraps. While searching, you discover robotic parts and take them. (+Robotic Parts)"
-*   **Scrapyard 2**: "Upon entering the scrapyard you find a huge pile of scraps. While searching, you discover robotic parts and take them. (+Robotic Parts)"
-*   **Water Supplies**: "Upon entering the water supplies storage, you find a huge pile of materials. While searching, you find a long water hose with a portable tank and take it. (+Water Hose)"
+*   **Scrapyard 1**: "You've entered a scrapyard filled with piles of old parts and debris. Searching through the scraps, you spot some robotic parts that might be useful."
+*   **Scrapyard 2**: "Another scrapyard section spreads before you. Mountains of discarded equipment clutter the area. You notice more robotic parts among the junk."
+*   **Water Supplies**: "You are in the water supplies storage. A huge pile of materials lies before you. Among the supplies, you can see a long water hose with a portable tank."
 *   **Hydro Hub**: "You start walking toward the river and arrive at a junction. A sign reads: ==Welcome to the Hydro Hub== Aurora Hub (south), Research Center (north), Hydroelectric Dam (east), Tundra Forest (west)"
-*   **The Dam Plant**: "After a short stroll you arrive at the riverside with no bridge leading across. A large Hydroelectric Plant sits here; an entrance leads to the Control Room (north), but the door is locked."
-*   **Research Center**: "You step into the lobby of an Aurora outpost. This building supports engineers on their missions and has two main sections: a Library (up) and the Cafeteria (right). The way back to the Hydro Hub is south."
+*   **The Dam Plant**: "After a short stroll you arrive at the riverside with no bridge leading across. A large Hydroelectric Plant sits here; an entrance leads to the Control Room (north). Use the Dam Key to unlock the Control Room if necessary."
+*   **Research Center**: "You step into the lobby of an Aurora outpost. This building supports engineers on their missions and has two main sections: a Library (up) and the Cafeteria (east). The way back to the Hydro Hub is south."
 *   **Tundra Forrest**: "You have entered the Tundra forrest. There are giant trees as far as you can see. You see some items you that you can move, a few pinecones on the ground(take pinecone) and some berries on a nearby bush(take berries), you can try to wander around but it might get you lost"
 *   **Library**: "Loads of heavy shelves hold thousands of technical theory, documents and old logbooks. A single chair is occupied by a person reading one of the books, you can approach ther (talk). The lobby is downstrairs(down)"
-*   **Cafeteria**: "A regular cafeteria. Near the serving station, you see a small, out of place item lying among the cutlery. It looks like a key, dou you take it?(take key) It might come in handy later... The lobby is to the Left(left)."
+*   **Cafeteria**: "A regular cafeteria. Near the serving station, you see a small, out of place item lying among the cutlery. It looks like a key — do you take it? (take key) It might come in handy later... The lobby is to the west."
 *   **Top of the Hill**: "After climbing up the hill you find a forgotten toolbox. You see a box labeled levers, take one?(take lever). The only way down is back to the Tundra (south)."
-*   **Control Room**: "You walk deep into the dam to the Control Room. Directly ahead is the emergency restart control panel with the restart lever marked; however, the lever is completely rusted and jammed shut. You need to derust or replace it if you ever want to restart the plant. The only way back is south to the Dam Plant."
+*   **Control Room**: "You walk deep into the dam to the Control Room. Directly ahead is the emergency restart control panel with the restart lever marked; however, the lever is completely rusted and jammed shut. You can try `use lever` if you have a lever, or `use berries` and `use pinecone` together to derust it. The only way back is south to The Dam Plant."
 *   **Mount Boreal**: "You're standing atop the peak of Mount Boreal. To the south is a ridge path leading to an abandoned cabin."
 *   **Cabin**: "You've entered an old, abandoned cabin once used by maintenance crews. You can see old papers and spare parts scattered on the ground. To the east is a door which seems to lead to the garden. In a corner you can see a snack bar with wild berries, it could be useful. (take snack)"
 *   **Garden**: "You're standing in the garden, now overgrown with weeds and bushes. You can feel the cold wind on your face. To the north is an old, half-broken shed. To the south you can see the turbines turning faintly in the distance."
@@ -437,7 +443,7 @@ Since the game relies heavily on state changes, the following key scenarios shou
 ## 8. Configuration & Constants
 The game uses several "magic numbers" that should be defined as constants for easy balancing:
 
-*   **QTE_TIMEOUT_MS**: `1000` (Time allowed to press a key in the Hydro minigame).
+*   **QTE_TIMEOUT_MS**: `3000` (Time allowed to press a key in the Hydro minigame).
 *   **QTE_ROUNDS**: `5` (Number of successful key presses required).
 *   **QTE_PENALTY_MS**: `10000` (Wait time after failing the QTE).
 *   **QUIZ_CORRECT_OPTION**: `2` (The correct index for the Solar Desert quiz).

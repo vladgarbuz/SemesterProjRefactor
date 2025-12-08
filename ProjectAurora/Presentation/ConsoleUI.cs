@@ -124,7 +124,8 @@ namespace ProjectAurora.Presentation
 
         private bool RunHydroQTE(ProjectAurora.Domain.IQte qte)
         {
-            Console.WriteLine("PREPARE FOR QTE! Press the keys shown within 1 second!");
+            int timeoutMs = 3000; // allow 3 seconds per key press
+            Console.WriteLine($"PREPARE FOR QTE! Press the keys shown within {timeoutMs / 1000} seconds!");
             Thread.Sleep(1000);
             Random rnd = new Random();
             char[] keys = qte.Keys;
@@ -140,7 +141,7 @@ namespace ProjectAurora.Presentation
                 DateTime start = DateTime.Now;
                 bool pressed = false;
                 
-                while ((DateTime.Now - start).TotalMilliseconds < 1000)
+                while ((DateTime.Now - start).TotalMilliseconds < timeoutMs)
                 {
                     if (Console.KeyAvailable)
                     {

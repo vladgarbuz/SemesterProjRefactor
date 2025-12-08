@@ -22,8 +22,7 @@ namespace ProjectAurora.Domain
                 { "west", moveCommand },
                 { "up", moveCommand },
                 { "down", moveCommand },
-                { "left", moveCommand },
-                { "right", moveCommand },
+                // Left and right movement aliases removed in favor of cardinal directions
                 { "look", new LookCommand() },
                 { "take", new TakeCommand() },
                 { "use", new UseCommand() },
@@ -38,7 +37,7 @@ namespace ProjectAurora.Domain
             _directions = new HashSet<string>
             {
                 // Removed 'inside' and 'outside' in favor of using cardinals for all moves
-                "north", "south", "east", "west", "up", "down", "left", "right"
+                "north", "south", "east", "west", "up", "down"
             };
         }
 
