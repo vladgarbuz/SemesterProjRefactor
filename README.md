@@ -139,21 +139,19 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
     *   `west` -> Desert Hub
 2.  **Desert Hub**
     *   `east` -> Solar Desert
-    *   `west` -> Maintenance Tent Outside (Only after talking to NPC)
+    *   `west` -> Maintenance Tent (Only after talking to NPC)
     *   `north` -> Solar Panel Fields (Only after talking to NPC)
     *   `south` -> Junkyard (Requires **Desert Key**)
     *   **NPC**: Dr. Liora Sunvale.
         *   Action: `talk` sets `talkedToLiora = true`, unlocking West and North exits.
-3.  **Maintenance Tent Outside**
-    *   **Event**: Upon entry, a quiz is triggered.
+3.  **Maintenance Tent**
+    *   `east` -> Desert Hub
+    *   **Event**: Upon entry, a quiz is triggered (if not already completed).
         *   Question: "What happens if solar panels overheat?"
         *   Options: (1) More energy, (2) Less efficiency, (3) Catch fire.
-        *   Input `2`: Success. Moves to **Maintenance Tent**. Adds **Desert Key** to inventory.
-        *   Input `1` or `3`: Failure. Moves back to **Desert Hub**.
-4.  **Maintenance Tent**
-    *   `east` -> Desert Hub
-    *   **Note**: Entering this room (via the quiz) automatically grants the **Desert Key**.
-5.  **Junkyard**
+        *   Input `2`: Success. Player enters the tent. Adds **Desert Key** to inventory.
+        *   Input `1` or `3`: Failure. Entry denied, player remains in Desert Hub.
+4.  **Junkyard**
     *   `north` -> Desert Hub
     *   `west` -> Water Supplies
     *   `south` -> Scrapyard 1
@@ -346,7 +344,7 @@ The design emphasizes the following Object-Oriented principles:
 To support the architecture, state is distributed to relevant objects:
 
 #### Room State
-*   **MaintenanceTentOutside**: `IsQuizCompleted` (bool)
+*   **MaintenanceTent**: `IsQuizCompleted` (bool)
 *   **MetalBox**: `IsVisited` (bool)
 *   **ControlRoom**: `IsLeverRepaired` (bool), `IsLeverDerusted` (bool)
 *   **TheDamPlant**: `IsDoorLocked` (bool)
@@ -372,8 +370,7 @@ To support the architecture, state is distributed to relevant objects:
 *   **Aurora Control Hub**: "You are in the Aurora Control Hub, the heart of the last renewable energy initiative. The air hums with faint backup power. Screens flicker, showing maps of four darkened regions. A workbench lies in the corner with scattered tools."
 *   **Solar Desert**: "After walking for hours you find yourself in a desolate land. The desert stretches before you. Towers of sand cover the solar field. Heat shimmers across the horizon. You find a small hub that looks like it could have life(west)"
 *   **Desert Hub**: "You notice a map in front of the hub with the areas in the desert: Maintenance tent (west), Aurora Hub (east), Solar panel field (north), Junkyard (south). You decide to enter and there you find Dr. Liora Sunvale. She welcomes you and is ready to answer your questions. (talk)"
-*   **Maintenance Tent Outside**: "Before going in, the scientist guarding the tent ask you a question: 'What happens if solar panels overheat?' Your options are: (1) More energy, (2) Less efficiency, (3) Catch fire"
-*   **Maintenance Tent**: "You enter the tent and are greeted by a wooden box labeled 'Junkyard'. When you open the box you find a key. You will need it for your progress in the Solar Desert, so you take the key."
+*   **Maintenance Tent**: "You approach the maintenance tent. Before going in, the scientist guarding the tent asks you a question: 'What happens if solar panels overheat?' Your options are: (1) More energy, (2) Less efficiency, (3) Catch fire. Inside the tent is a wooden box labeled 'Junkyard'."
 *   **Solar Panel Fields**: "You find yourself in the Solar Panel Fields and notice a lot of piles of sand. You try to dig into one and you find a solar panel. There are thousands of them. How will you clean up the piles: (1) Water Hose (unreliable) (2) Robotic maintenece"
 *   **Junkyard**: "You use the key to enter the Junkyard and there you find 3 exits labeled: Water Supplies (west), Scrapyard 1 (south), Scrapyard 2 (east)"
 *   **Scrapyard 1**: "Upon entering the scrapyard you find a huge pile of scraps. While searching, you discover robotic parts and take them. (+Robotic Parts)"

@@ -24,8 +24,7 @@ namespace ProjectAurora.Domain
             // Solar Region
             var solarDesert = new Room("SolarDesert", "Solar Desert", "After walking for hours you find yourself in a desolate land. The desert stretches before you. Towers of sand cover the solar field. Heat shimmers across the horizon. You find a small hub that looks like it could have life(west)");
             var desertHub = new Room("DesertHub", "Desert Hub", "You notice a map in front of the hub with the areas in the desert: Maintenance tent (west), Aurora Hub (east), Solar panel field (north), Junkyard (south). You decide to enter and there you find Dr. Liora Sunvale. She welcomes you and is ready to answer your questions. (talk)") { Occupant = new ProjectAurora.Domain.NPCs.DrLiora() };
-            var maintTentOutside = new ProjectAurora.Data.Rooms.MaintTentOutsideRoom("MaintTentOutside", "Maintenance Tent Outside", "Before going in, the scientist guarding the tent ask you a question: 'What happens if solar panels overheat?' Your options are: (1) More energy, (2) Less efficiency, (3) Catch fire") { EntryRequirement = new TalkedToRequirement("Dr. Liora") };
-            var maintTent = new Room("MaintTent", "Maintenance Tent", "You enter the tent and are greeted by a wooden box labeled 'Junkyard'. When you open the box you find a key. You will need it for your progress in the Solar Desert, so you take the key.");
+            var maintTent = new ProjectAurora.Data.Rooms.MaintTentRoom("MaintTent", "Maintenance Tent", "You are inside the maintenance tent. Various tools are scattered about. In the corner sits a wooden box labeled 'Junkyard'.") { EntryRequirement = new TalkedToRequirement("Dr. Liora") };
             var solarFields = new ProjectAurora.Data.Rooms.SolarFieldsRoom("SolarFields", "Solar Panel Fields", "You find yourself in the Solar Panel Fields and notice a lot of piles of sand. You try to dig into one and you find a solar panel. There are thousands of them. How will you clean up the piles: (1) Water Hose (unreliable) (2) Robotic maintenece") { EntryRequirement = new TalkedToRequirement("Dr. Liora") };
             var junkyard = new Room("Junkyard", "Junkyard", "You use the key to enter the Junkyard and there you find 3 exits labeled: Water supplies (west), Scrapyard 1 (south), Scrapyard 2 (east)") { EntryRequirement = new KeyRequirement("Desert Key") };
             var waterSupplies = new ProjectAurora.Data.Rooms.AutoPickupRoom("WaterSupplies", "Water Supplies", "Upon entering the water supplies storage, you see a huge pile of materials. While searching, you find a long water hose with a portable tank and take it. (+Water Hose)", "Water Hose");
@@ -68,15 +67,11 @@ namespace ProjectAurora.Domain
             // desertHub -> solarDesert is already east; solarDesert -> desertHub is west (symmetric)
 
             desertHub.AddExit("east", solarDesert);
-            desertHub.AddExit("west", maintTentOutside); // Locked initially in logic, but connection exists
+            desertHub.AddExit("west", maintTent); // Quiz handled on entry
             desertHub.AddExit("north", solarFields); // Locked initially
             desertHub.AddExit("south", junkyard); // Locked by key
 
-            maintTentOutside.AddExit("north", maintTent); // Logic handles quiz - now uses north
-            // Add a cardinal-direction return to the tent's exterior (south)
-            maintTent.AddExit("south", maintTentOutside);
-            // Symmetric exit: outside -> desertHub (east) mirrors desertHub -> maintTentOutside (west)
-            maintTentOutside.AddExit("east", desertHub);
+            maintTent.AddExit("east", desertHub);
 
             junkyard.AddExit("north", desertHub);
             junkyard.AddExit("west", waterSupplies);
@@ -152,7 +147,8 @@ namespace ProjectAurora.Domain
 
             // --- Add Items ---
             // Solar
-            // Desert Key is given via quiz/box, not on ground usually, but let's put it in MaintTent box logic or just give it.
+            // Desert Key in MaintTent (visible after quiz completion)
+            maintTent.AddItem(new ProjectAurora.Data.Items.KeyItem("Desert Key", "Key to the Junkyard. Found in a wooden box."));
             // Water Hose in WaterSupplies
             waterSupplies.AddItem(new ProjectAurora.Data.Items.RepairItem("Water Hose", "A long water hose with a portable water tank."));
             // Robotic Parts
@@ -192,7 +188,6 @@ namespace ProjectAurora.Domain
             _rooms.Add(hub);
             _rooms.Add(solarDesert);
             _rooms.Add(desertHub);
-            _rooms.Add(maintTentOutside);
             _rooms.Add(maintTent);
             _rooms.Add(solarFields);
             _rooms.Add(junkyard);

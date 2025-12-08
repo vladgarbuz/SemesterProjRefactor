@@ -251,9 +251,9 @@ Type 'map' to display the world map.
 |            |                                    |             |             |
 |         [{TUND}]-----------------------------[{HHUB}]----[{DAM_}]           |
 |                                                 |                           |
-|[{TENT_IN}]       [{FILD}]                      |                            |
+|[{TENT}]          [{FILD}]                      |                            |
 |    |                 |                          |                           |
-|[{TENT_OUT}]-------[{DHUB}]----[{SOLR}]-------[{HUB_}]                       |
+|    +-------------[{DHUB}]----[{SOLR}]-------[{HUB_}]                       |
 |                      |                          |                           |
 |         [{WATR}]-[{JUNK}]-[{SCP2}]              |                           |
 |                      |                          |              [{SHED}]     |
@@ -276,8 +276,7 @@ Type 'map' to display the world map.
                 { "Hub", "{HUB_}" },
                 { "SolarDesert", "{SOLR}" },
                 { "DesertHub", "{DHUB}" },
-                { "MaintTentOutside", "{TENT_OUT}" },
-                { "MaintTent", "{TENT_IN}" },
+                { "MaintTent", "{TENT}" },
                 { "SolarFields", "{FILD}" },
                 { "Junkyard", "{JUNK}" },
                 { "WaterSupplies", "{WATR}" },
@@ -310,8 +309,7 @@ Type 'map' to display the world map.
                 { "Hub", " HUB  " },
                 { "SolarDesert", "SOLAR " },
                 { "DesertHub", "D.HUB " },
-                { "MaintTentOutside", "TENT O" },
-                { "MaintTent", "TENT I" },
+                { "MaintTent", " TENT " },
                 { "SolarFields", "FLD*  " },
                 { "Junkyard", " JUNK " },
                 { "WaterSupplies", "WATER " },

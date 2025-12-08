@@ -43,17 +43,21 @@ namespace ProjectAurora.Tests
             engine.State.MarkTalkedToLiora();
             engine.RunSolarQuiz = (q) => 2;
 
-            // Navigate to the maintenance tent outside: hub -> solarDesert -> desertHub -> maintTentOutside
+            // Navigate to the maintenance tent: hub -> solarDesert -> desertHub -> maintTent (west)
             engine.Move("west");
             engine.Move("west");
             engine.Move("west");
 
             Assert.Equal("MaintTent", engine.Player.CurrentRoom.ID);
-            Assert.True(engine.Player.HasItem("Desert Key"));
             Assert.Contains("Correct! You enter the tent.", engine.OutputMessage);
-            Assert.Contains("You received the Desert Key.", engine.OutputMessage);
             // Auto-look should also have printed a description
             Assert.Contains("Exits:", engine.OutputMessage);
+            
+            // Key should be in the room as an item
+            engine.ClearOutput();
+            engine.TakeItem("Desert Key");
+            Assert.True(engine.Player.HasItem("Desert Key"));
+            Assert.Contains("You took the Desert Key", engine.OutputMessage);
         }
 
         [Fact]
@@ -67,7 +71,7 @@ namespace ProjectAurora.Tests
             int called = 0;
             engine.RunSolarQuiz = (q) => { called++; return 2; };
 
-            // Navigate to the maintenance tent outside: hub -> solarDesert -> desertHub -> maintTentOutside
+            // Navigate to the maintenance tent: hub -> solarDesert -> desertHub -> maintTent (west)
             engine.Move("west");
             engine.Move("west");
             engine.Move("west");
@@ -78,12 +82,12 @@ namespace ProjectAurora.Tests
             Assert.Equal(1, called);
 
             // Move out of the tent and re-enter the same room
-            engine.Move("south"); // back to MaintTentOutside
+            engine.Move("east"); // back to DesertHub
             engine.ClearOutput();
-            engine.Move("north"); // attempt to re-enter
+            engine.Move("west"); // attempt to re-enter
 
-            // Verify we did not get asked the quiz again
-            Assert.DoesNotContain("What happens if solar panels overheat", engine.OutputMessage);
+            // Verify we entered successfully and the quiz function wasn't called again
+            Assert.Equal("MaintTent", engine.Player.CurrentRoom.ID);
             // Quiz shouldn't be called again
             Assert.Equal(1, called);
         }
@@ -107,17 +111,16 @@ namespace ProjectAurora.Tests
         }
 
         [Fact]
-        public void Map_ShowsTwoDistinctTentNodes()
+        public void Map_ShowsSingleTentNode()
         {
             var engine = new GameEngine();
             engine.ClearOutput();
             engine.PrintMap();
-            Assert.Contains("TENT O", engine.OutputMessage);
-            Assert.Contains("TENT I", engine.OutputMessage);
+            Assert.Contains(" TENT ", engine.OutputMessage);
         }
 
         [Fact]
-        public void MaintTent_Cannot_Go_East_Directly_To_DesertHub()
+        public void MaintTent_Goes_East_To_DesertHub()
         {
             var engine = new GameEngine();
             engine.ClearOutput();
@@ -131,17 +134,8 @@ namespace ProjectAurora.Tests
             Assert.Equal("MaintTent", engine.Player.CurrentRoom.ID);
 
             engine.ClearOutput();
-            engine.Move("east");
-            Assert.Equal("MaintTent", engine.Player.CurrentRoom.ID);
-            Assert.Contains("You can't go that way.", engine.OutputMessage);
-
-            // Now go back out and then east from outside should go to DesertHub (symmetric)
-            engine.Move("south");
-            Assert.Equal("MaintTentOutside", engine.Player.CurrentRoom.ID);
-            engine.Move("east");
+            engine.Move("east"); // should go back to DesertHub
             Assert.Equal("DesertHub", engine.Player.CurrentRoom.ID);
-            // Confirm we did NOT skip to SolarDesert
-            Assert.NotEqual("SolarDesert", engine.Player.CurrentRoom.ID);
         }
     }
 }
