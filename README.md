@@ -1,7 +1,5 @@
 # Project Aurora - Console Text Adventure
 
-[![.NET CI](https://github.com/<YOUR_USERNAME>/<YOUR_REPOSITORY>/actions/workflows/dotnet.yml/badge.svg)](https://github.com/<YOUR_USERNAME>/<YOUR_REPOSITORY>/actions/workflows/dotnet.yml)
-
 An open-source, console-based text-adventure where you play an engineer trying to restore power across three regions: Solar Desert, Hydro Hub, and Windy Highlands.
 
 ## 1. Overview
