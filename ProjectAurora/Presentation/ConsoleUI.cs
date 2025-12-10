@@ -22,7 +22,7 @@ namespace ProjectAurora.Presentation
         public void Run()
         {
             Console.Title = "Project Aurora";
-            Console.Clear();
+            ClearConsole();
             
             PrintWelcome();
 
@@ -53,7 +53,7 @@ namespace ProjectAurora.Presentation
                 
                 if (_engine.Player.CurrentRoom != oldRoom)
                 {
-                    Console.Clear();
+                    ClearConsole();
                 }
                 
                 PrintOutput();
@@ -171,6 +171,21 @@ namespace ProjectAurora.Presentation
             return true;
         }
 
+        private void ClearConsole()
+        {
+            try
+            {
+                if (!Console.IsOutputRedirected)
+                {
+                    Console.Clear();
+                }
+            }
+            catch (System.IO.IOException)
+            {
+                // Ignore
+            }
+        }
+
         private void PrintWelcome()
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -204,7 +219,7 @@ namespace ProjectAurora.Presentation
             {
                 Console.ReadKey();
             }
-            Console.Clear();
+            ClearConsole();
         }
     }
 }

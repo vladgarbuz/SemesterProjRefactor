@@ -1,7 +1,3 @@
-1. A message should be displayed when the user tries to use an item in the wrong place.
-2. Fix this description, make it better "You have entered the Tundra forrest. There are giant trees as far as you can see. You see some items you that you can move, a few pinecones on the ground(take pinecone) and some berries on a nearby bush(take berries), you can try to wander around but it might get you lost"
-3. Remove the left direction from the text, replace it with cardinal directions "A regular cafeteria. Near the serving station, you see a small, out of place item lying among the cutlery. It looks like a key, dou you take it?(take key) It might come in handy later... The lobby is to the Left(left)." Do that for any other occurence of left, right. Remove left and right from the user movement.
-4. Fix the Control Room text - the user must replace and derust, make hints for the user to know that he should type the "use" command "You move to Control Room.
-You walk deep into the dam to the Control Room. Directly ahead is the emergency restart control panel with the restart lever marked, however the lever is completely rusted and jammed shut. You need to derust or replace it if you ever want to restart the plant. The only way back is south to the Dam Plant."
-5. Fix the Dam Plant description, take in account that the user might be coming from the other direction and he already unlocked the door "After a short stroll you arrive at the riverside with no bridge leading across. A large Hydroelectric Plant sits here; an entrance leads to the Control Room (north), but the door is locked."
-6. Make sure the items dissapear from inventory when they are used and not needed anymore in the game
+1. When Prof. Kael gives the key the user must write the 'take Shed Key' command to get it.
+2. The player must manually take the control board when the raccoon drops it. 
+3. The Shed key should dissappear from inventory once it was consumed and no more need to open the Shed door.
