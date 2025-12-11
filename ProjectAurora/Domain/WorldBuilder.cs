@@ -55,11 +55,11 @@ namespace ProjectAurora.Domain
             var computers = new Room("Computers", "Computers", "You see old computers faintly flickering.") { Occupant = new ProjectAurora.Domain.NPCs.ComputersTerminal() };
 
             // Geothermal Region (Volcanic Plains)
-            var steamVents = new ProjectAurora.Data.Rooms.SteamVentsRoom("SteamVents", "Ancient Steam Vents", "Natural geysers erupt, sending steam skyward. The ground is fractured with colorful mineral deposits. This is the hottest point in the volcanic plains.");
-            var hotSprings = new Room("HotSprings", "Natural Hot Springs", "Steaming pools of turquoise water surrounded by white terraces. The water is heated by geothermal energy below.") { Occupant = new ProjectAurora.Domain.NPCs.Kenji() };
-            var observatory = new ProjectAurora.Data.Rooms.ThermalObservatoryRoom("Observatory", "Thermal Observatory", "A monitoring station on volcanic rock. Equipment measures ground temperature and seismic activity. Digital displays show thermal maps of underground reservoirs.") { Occupant = new ProjectAurora.Domain.NPCs.DrElenaVoss() };
-            var separator = new Room("Separator", "Steam Separator Station", "A facility where superheated brine separates into steam and water. Large pressure vessels dominate the space. Steam drives turbines while water is reinjected underground.") { Occupant = new ProjectAurora.Domain.NPCs.James() };
-            var plantExterior = new ProjectAurora.Data.Rooms.PlantExteriorRoom("PlantExterior", "Geothermal Plant Exterior", "The main facility with cooling towers and turbine buildings. This plant generates 50 megawatts of constant renewable power.") { Occupant = new ProjectAurora.Domain.NPCs.ChiefRodriguez() };
+            var steamVents = new ProjectAurora.Data.Rooms.SteamVentsRoom("SteamVents", "Ancient Steam Vents", "Steam geysers erupt over mineral-rich fractures. Try taking the thermal data.");
+            var hotSprings = new Room("HotSprings", "Natural Hot Springs", "Steaming turquoise pools warmed by geothermal heat. NPC: Kenji (talk).") { Occupant = new ProjectAurora.Domain.NPCs.Kenji() };
+            var observatory = new ProjectAurora.Data.Rooms.ThermalObservatoryRoom("Observatory", "Thermal Observatory", "A monitoring station with instruments and thermal maps. Dr. Elena Voss wants to test you (use permit) and for you to bring her the data (use thermal data) NPC: Dr. Elena Voss (talk).") { Occupant = new ProjectAurora.Domain.NPCs.DrElenaVoss() };
+            var separator = new Room("Separator", "Steam Separator Station", "Steam/water treatment with large pressure vessels and valves. NPC: James (talk).") { Occupant = new ProjectAurora.Domain.NPCs.James() };
+            var plantExterior = new ProjectAurora.Data.Rooms.PlantExteriorRoom("PlantExterior", "Geothermal Plant Exterior", "Geothermal plant exterior with cooling towers and turbine buildings. NPC: Chief Rodriguez (talk).") { Occupant = new ProjectAurora.Domain.NPCs.ChiefRodriguez() };
 
             // --- Connect Rooms ---
 
@@ -207,7 +207,7 @@ namespace ProjectAurora.Domain
             // Shed Key - Given by Kael.
 
             // Geothermal
-            steamVents.AddItem(new Item("thermal_data", "Thermal readings showing 180°C at 2km depth."));
+            steamVents.AddItem(new Item("thermal data", "Thermal readings showing 180°C at 2km depth."));
 
             StartingRoom = hub;
             

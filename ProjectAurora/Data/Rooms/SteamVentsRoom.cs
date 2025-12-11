@@ -9,10 +9,17 @@ namespace ProjectAurora.Data.Rooms
 
         public override bool OnTakeItem(string itemName, Player player, GameState state, GameEngine engine)
         {
-            if (itemName.ToLower() == "thermal_data")
+            if (itemName.ToLower() == "thermal data")
             {
-                var item = Items[0]; // thermal_data should be the only item
-                if (item != null && item.Name.ToLower() == "thermal_data")
+                // Check if item still exists in the room
+                if (Items.Count == 0)
+                {
+                    engine.Print("There is no thermal data to take here.");
+                    return true;
+                }
+
+                var item = Items.FirstOrDefault(i => i.Name.ToLower() == "thermal data");
+                if (item != null)
                 {
                     player.AddItem(item);
                     RemoveItem(item);

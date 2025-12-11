@@ -37,16 +37,6 @@ namespace ProjectAurora.Presentation
                 
                 if (string.IsNullOrWhiteSpace(input)) continue;
 
-                // Clear screen on move? Spec says: "Screen Clearing: The console clears upon moving to a new room"
-                // But we only know if we moved if the engine tells us.
-                // The engine prints room change messages; we check if the CurrentRoom changed.
-                // I'll check if the room changed?
-                // Or I can just clear if the command was a movement command?
-                // The engine handles logic.
-                // Let's just clear if the output contains a room description?
-                // Or better: The engine could have an event `OnRoomChanged`.
-                // For now, I'll just print. If I want to clear, I need to know if room changed.
-                // I'll check `_engine.Player.CurrentRoom` before and after?
                 var oldRoom = _engine.Player.CurrentRoom;
                 
                 _parser.ParseAndExecute(input, _engine);

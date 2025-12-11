@@ -9,11 +9,31 @@ namespace ProjectAurora.Data.Rooms
 
         public override bool OnUseItem(Item item, Player player, GameState state, GameEngine engine)
         {
+            if (item.Name.ToLower() == "thermal data")
+            {
+                if (state.ThermalDataSubmitted)
+                {
+                    engine.Print("You have already submitted the thermal data to Dr. Elena Voss.");
+                    return true;
+                }
+
+                engine.Print("You submit the thermal data to Dr. Elena Voss for analysis.");
+                player.RemoveItem("thermal data");
+                state.MarkThermalDataSubmitted();
+                return true;
+            }
+
             if (item.Name.ToLower() == "permit")
             {
                 if (state.GeothermalCertified)
                 {
                     engine.Print("You have already completed the geothermal certification.");
+                    return true;
+                }
+
+                if (!state.ThermalDataSubmitted)
+                {
+                    engine.Print("Dr. Elena Voss needs the thermal data first. Bring it to her when you have it.");
                     return true;
                 }
 

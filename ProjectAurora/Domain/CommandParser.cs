@@ -22,7 +22,6 @@ namespace ProjectAurora.Domain
                 { "west", moveCommand },
                 { "up", moveCommand },
                 { "down", moveCommand },
-                // Left and right movement aliases removed in favor of cardinal directions
                 { "look", new LookCommand() },
                 { "take", new TakeCommand() },
                 { "use", new UseCommand() },

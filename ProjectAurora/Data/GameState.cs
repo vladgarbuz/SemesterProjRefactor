@@ -20,6 +20,7 @@ namespace ProjectAurora.Data
         // Geothermal
         public bool TalkedToRodriguez => GetFlag(nameof(TalkedToRodriguez));
         public bool HasThermalData => GetFlag(nameof(HasThermalData));
+        public bool ThermalDataSubmitted => GetFlag(nameof(ThermalDataSubmitted));
         public bool GeothermalCertified => GetFlag(nameof(GeothermalCertified));
 
         public GameState()
@@ -56,6 +57,7 @@ namespace ProjectAurora.Data
         // Geothermal
         public void MarkTalkedToRodriguez() => SetFlag(nameof(TalkedToRodriguez));
         public void MarkHasThermalData() => SetFlag(nameof(HasThermalData));
+        public void MarkThermalDataSubmitted() => SetFlag(nameof(ThermalDataSubmitted));
         public void MarkGeothermalCertified() => SetFlag(nameof(GeothermalCertified));
     }
 }

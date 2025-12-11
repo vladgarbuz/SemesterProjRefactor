@@ -231,5 +231,237 @@ namespace ProjectAurora.Tests
             Assert.False(player.HasItem("Robotic Parts 1"));
             Assert.False(player.HasItem("Robotic Parts 2"));
         }
+
+        // --- Geothermal Zone Tests ---
+
+        [Fact]
+        public void ChiefRodriguez_Talk_GivesPermitAndMarksState()
+        {
+            var chief = new ProjectAurora.Domain.NPCs.ChiefRodriguez();
+            var engine = new GameEngine();
+            var plantRoom = new ProjectAurora.Data.Rooms.PlantExteriorRoom("PlantExterior", "Plant", "desc");
+            var player = new Player(plantRoom);
+            var state = engine.State;
+
+            Assert.False(state.TalkedToRodriguez);
+            chief.Talk(player, state, engine.Print, engine);
+            
+            Assert.True(state.TalkedToRodriguez);
+            Assert.Contains("permit", plantRoom.Items.Select(i => i.Name.ToLower()));
+            Assert.Contains("50 megawatts", engine.OutputMessage);
+        }
+
+        [Fact]
+        public void ChiefRodriguez_TalkAgain_GivesAdditionalInfo()
+        {
+            var chief = new ProjectAurora.Domain.NPCs.ChiefRodriguez();
+            var engine = new GameEngine();
+            var plantRoom = new ProjectAurora.Data.Rooms.PlantExteriorRoom("PlantExterior", "Plant", "desc");
+            var player = new Player(plantRoom);
+            var state = engine.State;
+
+            state.MarkTalkedToRodriguez();
+            engine.ClearOutput();
+            chief.Talk(player, state, engine.Print, engine);
+            
+            Assert.Contains("complete cycle", engine.OutputMessage);
+        }
+
+        [Fact]
+        public void SteamVentsRoom_TakeThermalData_MarksStateAndAddsToInventory()
+        {
+            var steamVents = new ProjectAurora.Data.Rooms.SteamVentsRoom("SteamVents", "Vents", "desc");
+            var engine = new GameEngine();
+            var player = new Player(steamVents);
+            var state = engine.State;
+            
+            steamVents.AddItem(new Item("thermal data", "Thermal readings showing 180°C at 2km depth."));
+            
+            Assert.False(state.HasThermalData);
+            var handled = steamVents.OnTakeItem("thermal data", player, state, engine);
+            
+            Assert.True(handled);
+            Assert.True(state.HasThermalData);
+            Assert.True(player.HasItem("thermal data"));
+            Assert.Contains("180°C at 2km depth", engine.OutputMessage);
+        }
+
+        [Fact]
+        public void SteamVentsRoom_TakeThermalData_SecondTime_PrintsAlreadyTakenMessage()
+        {
+            var steamVents = new ProjectAurora.Data.Rooms.SteamVentsRoom("SteamVents", "Vents", "desc");
+            var engine = new GameEngine();
+            var player = new Player(steamVents);
+            var state = engine.State;
+            
+            steamVents.AddItem(new Item("thermal data", "Thermal readings showing 180°C at 2km depth."));
+            
+            // First take
+            var handled1 = steamVents.OnTakeItem("thermal data", player, state, engine);
+            Assert.True(handled1);
+            Assert.True(player.HasItem("thermal data"));
+            
+            // Second take attempt
+            engine.ClearOutput();
+            var handled2 = steamVents.OnTakeItem("thermal data", player, state, engine);
+            
+            Assert.True(handled2);
+            Assert.Contains("no thermal data to take", engine.OutputMessage.ToLower());
+        }
+
+        [Fact]
+        public void DrElenaVoss_Talk_WithoutThermalData_AsksForData()
+        {
+            var elena = new ProjectAurora.Domain.NPCs.DrElenaVoss();
+            var engine = new GameEngine();
+            var player = new Player(new Room("Observatory", "Observatory", "desc"));
+            var state = engine.State;
+
+            elena.Talk(player, state, engine.Print, engine);
+            
+            Assert.Contains("Steam Vents", engine.OutputMessage);
+            Assert.Contains("thermal data", engine.OutputMessage.ToLower());
+        }
+
+        [Fact]
+        public void DrElenaVoss_Talk_WithThermalData_GivesPositiveResponse()
+        {
+            var elena = new ProjectAurora.Domain.NPCs.DrElenaVoss();
+            var engine = new GameEngine();
+            var player = new Player(new Room("Observatory", "Observatory", "desc"));
+            var state = engine.State;
+            
+            player.AddItem(new Item("thermal data", ""));
+            elena.Talk(player, state, engine.Print, engine);
+            
+            Assert.Contains("decades", engine.OutputMessage);
+            Assert.Contains("sustainable", engine.OutputMessage.ToLower());
+        }
+
+        [Fact]
+        public void ThermalObservatoryRoom_UsePermit_TriggersQuizAndGivesCertificate()
+        {
+            var observatory = new ProjectAurora.Data.Rooms.ThermalObservatoryRoom("Observatory", "Observatory", "desc");
+            var engine = new GameEngine();
+            var player = new Player(observatory);
+            var state = engine.State;
+            
+            player.AddItem(new Item("permit", "A permit"));
+            engine.RunQuiz = (q) => q.PassThreshold; // Pass the quiz
+            
+            Assert.False(state.GeothermalCertified);
+            var permit = player.Inventory.First(i => i.Name == "permit");
+            var handled = observatory.OnUseItem(permit, player, state, engine);
+            
+            Assert.True(handled);
+            Assert.True(state.GeothermalCertified);
+            Assert.True(player.HasItem("geothermal_certificate"));
+            Assert.False(player.HasItem("permit"));
+            Assert.Contains("Congratulations", engine.OutputMessage);
+        }
+
+        [Fact]
+        public void ThermalObservatoryRoom_UsePermit_FailQuiz_DoesNotGiveCertificate()
+        {
+            var observatory = new ProjectAurora.Data.Rooms.ThermalObservatoryRoom("Observatory", "Observatory", "desc");
+            var engine = new GameEngine();
+            var player = new Player(observatory);
+            var state = engine.State;
+            
+            player.AddItem(new Item("permit", "A permit"));
+            engine.RunQuiz = (q) => 0; // Fail the quiz
+            
+            var permit = player.Inventory.First(i => i.Name == "permit");
+            var handled = observatory.OnUseItem(permit, player, state, engine);
+            
+            Assert.True(handled);
+            Assert.False(state.GeothermalCertified);
+            Assert.False(player.HasItem("geothermal_certificate"));
+            Assert.True(player.HasItem("permit"));
+            Assert.Contains("Try again", engine.OutputMessage);
+        }
+
+        [Fact]
+        public void ThermalObservatoryRoom_UsePermit_AlreadyCertified_PrintsMessage()
+        {
+            var observatory = new ProjectAurora.Data.Rooms.ThermalObservatoryRoom("Observatory", "Observatory", "desc");
+            var engine = new GameEngine();
+            var player = new Player(observatory);
+            var state = engine.State;
+            
+            state.MarkGeothermalCertified();
+            player.AddItem(new Item("permit", "A permit"));
+            
+            var permit = player.Inventory.First(i => i.Name == "permit");
+            engine.ClearOutput();
+            var handled = observatory.OnUseItem(permit, player, state, engine);
+            
+            Assert.True(handled);
+            Assert.Contains("already completed", engine.OutputMessage);
+        }
+
+        [Fact]
+        public void Kenji_Talk_SharesSpringPhilosophy()
+        {
+            var kenji = new ProjectAurora.Domain.NPCs.Kenji();
+            var engine = new GameEngine();
+            var player = new Player(new Room("HotSprings", "Springs", "desc"));
+            var state = engine.State;
+
+            kenji.Talk(player, state, engine.Print, engine);
+            
+            Assert.Contains("generations", engine.OutputMessage);
+            Assert.Contains("balance", engine.OutputMessage.ToLower());
+        }
+
+        [Fact]
+        public void James_Talk_ExplainsSeparatorOperation()
+        {
+            var james = new ProjectAurora.Domain.NPCs.James();
+            var engine = new GameEngine();
+            var player = new Player(new Room("Separator", "Separator", "desc"));
+            var state = engine.State;
+
+            james.Talk(player, state, engine.Print, engine);
+            
+            Assert.Contains("separator", engine.OutputMessage.ToLower());
+            Assert.Contains("24/7", engine.OutputMessage);
+        }
+
+        [Fact]
+        public void PlantExteriorRoom_OnEnter_FirstTime_AnnouncesChiefRodriguez()
+        {
+            var plant = new ProjectAurora.Data.Rooms.PlantExteriorRoom("PlantExterior", "Plant", "desc") 
+            { 
+                Occupant = new ProjectAurora.Domain.NPCs.ChiefRodriguez() 
+            };
+            var engine = new GameEngine();
+            var player = new Player(plant);
+            var state = engine.State;
+            
+            engine.ClearOutput();
+            plant.OnEnter(player, state, engine);
+            
+            Assert.Contains("Rodriguez", engine.OutputMessage);
+        }
+
+        [Fact]
+        public void PlantExteriorRoom_OnEnter_AfterTalking_NoAnnouncement()
+        {
+            var plant = new ProjectAurora.Data.Rooms.PlantExteriorRoom("PlantExterior", "Plant", "desc") 
+            { 
+                Occupant = new ProjectAurora.Domain.NPCs.ChiefRodriguez() 
+            };
+            var engine = new GameEngine();
+            var player = new Player(plant);
+            var state = engine.State;
+            
+            state.MarkTalkedToRodriguez();
+            
+            engine.ClearOutput();
+            plant.OnEnter(player, state, engine);
+            
+            Assert.DoesNotContain("Rodriguez", engine.OutputMessage);
+        }
     }
 }
