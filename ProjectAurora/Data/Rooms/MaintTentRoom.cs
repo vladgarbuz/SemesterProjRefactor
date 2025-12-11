@@ -11,11 +11,11 @@ namespace ProjectAurora.Data.Rooms
 
         public override bool OnEnter(Player player, GameState state, GameEngine engine)
         {
-            if (!state.QuizCompleted && engine.RunSolarQuiz != null)
+            if (!state.QuizCompleted && engine.RunQuiz != null)
             {
                 var quiz = new ProjectAurora.Domain.SolarQuiz();
-                int result = engine.RunSolarQuiz(quiz);
-                if (result == 2)
+                int correctCount = engine.RunQuiz(quiz);
+                if (correctCount >= quiz.PassThreshold)
                 {
                     state.CompleteQuiz();
                     engine.Print("Correct! You enter the tent.");

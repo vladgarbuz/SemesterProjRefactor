@@ -15,7 +15,7 @@ namespace ProjectAurora.Presentation
             _parser = new CommandParser();
 
             // Wire up delegates
-            _engine.RunSolarQuiz = RunSolarQuiz;
+            _engine.RunQuiz = RunQuiz;
             _engine.RunHydroQTE = RunHydroQTE;
         }
 
@@ -106,20 +106,62 @@ namespace ProjectAurora.Presentation
             }
         }
 
-        private int RunSolarQuiz(ProjectAurora.Domain.IQuiz quiz)
+        private int RunQuiz(ProjectAurora.Domain.IMultiQuestionQuiz quiz)
         {
-            Console.WriteLine("Question: " + quiz.Question);
-            for (int i = 0; i < quiz.Options.Length; i++)
+            Console.WriteLine();
+            if (quiz.Questions.Length > 1)
             {
-                Console.WriteLine($"({i + 1}) {quiz.Options[i]}");
+                Console.WriteLine($"=== QUIZ: Answer {quiz.PassThreshold} out of {quiz.Questions.Length} correctly to pass ===");
             }
-            Console.Write("Answer: ");
-            var key = Console.ReadLine();
-            if (int.TryParse(key, out int result))
+            else
             {
-                return result;
+                Console.WriteLine("=== QUIZ ===");
             }
-            return 0;
+            Console.WriteLine();
+
+            int correctCount = 0;
+
+            for (int q = 0; q < quiz.Questions.Length; q++)
+            {
+                if (quiz.Questions.Length > 1)
+                {
+                    Console.WriteLine($"Question {q + 1}: {quiz.Questions[q]}");
+                }
+                else
+                {
+                    Console.WriteLine($"Question: {quiz.Questions[q]}");
+                }
+                for (int i = 0; i < quiz.Options[q].Length; i++)
+                {
+                    Console.WriteLine($"  ({i + 1}) {quiz.Options[q][i]}");
+                }
+                Console.Write("Your answer: ");
+                var input = Console.ReadLine();
+                if (int.TryParse(input, out int answer) && answer == quiz.CorrectAnswers[q])
+                {
+                    if (quiz.Questions.Length > 1)
+                    {
+                        Console.WriteLine("Correct!");
+                    }
+                    correctCount++;
+                }
+                else
+                {
+                    if (quiz.Questions.Length > 1)
+                    {
+                        Console.WriteLine("Incorrect.");
+                    }
+                }
+                Console.WriteLine();
+            }
+
+            if (quiz.Questions.Length > 1)
+            {
+                Console.WriteLine($"You answered {correctCount} out of {quiz.Questions.Length} correctly.");
+                Console.WriteLine();
+            }
+
+            return correctCount;
         }
 
         private bool RunHydroQTE(ProjectAurora.Domain.IQte qte)

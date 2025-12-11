@@ -54,9 +54,9 @@ namespace ProjectAurora.Tests
             var engine = new GameEngine();
             engine.ClearOutput();
 
-            // Allow access to the tent and stub the quiz to return '2' (correct)
+            // Allow access to the tent and stub the quiz to return 1 correct answer (pass)
             engine.State.MarkTalkedToLiora();
-            engine.RunSolarQuiz = (q) => 2;
+            engine.RunQuiz = (q) => 1;
 
             // Navigate to the maintenance tent: hub -> solarDesert -> desertHub -> maintTent (west)
             engine.Move("west");
@@ -81,10 +81,10 @@ namespace ProjectAurora.Tests
             var engine = new GameEngine();
             engine.ClearOutput();
 
-            // Allow access to the tent and stub the quiz to return '2' (correct)
+            // Allow access to the tent and stub the quiz to return 1 correct answer (pass)
             engine.State.MarkTalkedToLiora();
             int called = 0;
-            engine.RunSolarQuiz = (q) => { called++; return 2; };
+            engine.RunQuiz = (q) => { called++; return 1; };
 
             // Navigate to the maintenance tent: hub -> solarDesert -> desertHub -> maintTent (west)
             engine.Move("west");
@@ -114,7 +114,7 @@ namespace ProjectAurora.Tests
             engine.ClearOutput();
 
             engine.State.MarkTalkedToLiora();
-            engine.RunSolarQuiz = (q) => 3; // fail
+            engine.RunQuiz = (q) => 0; // fail - 0 correct answers
 
             engine.Move("west");
             engine.Move("west");
@@ -142,7 +142,7 @@ namespace ProjectAurora.Tests
 
             engine.State.MarkTalkedToLiora();
             
-            engine.RunSolarQuiz = (q) => 2; // pass quiz to get into tent
+            engine.RunQuiz = (q) => 1; // pass quiz to get into tent
             engine.Move("west");
             engine.Move("west");
             engine.Move("west"); // into tent

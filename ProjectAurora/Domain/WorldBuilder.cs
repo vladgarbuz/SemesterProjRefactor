@@ -54,12 +54,20 @@ namespace ProjectAurora.Domain
             var metalBox = new Room("MetalBox", "Metal Box", "You're standing in front of the locked box. It seems to require a code to open.");
             var computers = new Room("Computers", "Computers", "You see old computers faintly flickering.") { Occupant = new ProjectAurora.Domain.NPCs.ComputersTerminal() };
 
+            // Geothermal Region (Volcanic Plains)
+            var steamVents = new ProjectAurora.Data.Rooms.SteamVentsRoom("SteamVents", "Ancient Steam Vents", "Natural geysers erupt, sending steam skyward. The ground is fractured with colorful mineral deposits. This is the hottest point in the volcanic plains.");
+            var hotSprings = new Room("HotSprings", "Natural Hot Springs", "Steaming pools of turquoise water surrounded by white terraces. The water is heated by geothermal energy below.") { Occupant = new ProjectAurora.Domain.NPCs.Kenji() };
+            var observatory = new ProjectAurora.Data.Rooms.ThermalObservatoryRoom("Observatory", "Thermal Observatory", "A monitoring station on volcanic rock. Equipment measures ground temperature and seismic activity. Digital displays show thermal maps of underground reservoirs.") { Occupant = new ProjectAurora.Domain.NPCs.DrElenaVoss() };
+            var separator = new Room("Separator", "Steam Separator Station", "A facility where superheated brine separates into steam and water. Large pressure vessels dominate the space. Steam drives turbines while water is reinjected underground.") { Occupant = new ProjectAurora.Domain.NPCs.James() };
+            var plantExterior = new ProjectAurora.Data.Rooms.PlantExteriorRoom("PlantExterior", "Geothermal Plant Exterior", "The main facility with cooling towers and turbine buildings. This plant generates 50 megawatts of constant renewable power.") { Occupant = new ProjectAurora.Domain.NPCs.ChiefRodriguez() };
+
             // --- Connect Rooms ---
 
             // Hub Connections
             hub.AddExit("north", hydroHub);
             hub.AddExit("west", solarDesert);
             hub.AddExit("south", mountBoreal);
+            hub.AddExit("east", hotSprings);
 
             // Solar Connections
             solarDesert.AddExit("west", desertHub);
@@ -143,6 +151,24 @@ namespace ProjectAurora.Domain
             
             computers.AddExit("south", tower);
 
+            // Geothermal Connections
+            // Based on spec: SteamVents <-> HotSprings <-> Plant, HotSprings <-> Observatory <-> Separator <-> Plant
+            hotSprings.AddExit("west", hub);  // Back to hub
+            hotSprings.AddExit("north", steamVents);
+            hotSprings.AddExit("south", observatory);
+            hotSprings.AddExit("east", plantExterior);
+
+            steamVents.AddExit("south", hotSprings);
+
+            observatory.AddExit("north", hotSprings);
+            observatory.AddExit("west", separator);
+
+            separator.AddExit("east", observatory);
+            separator.AddExit("north", plantExterior);
+
+            plantExterior.AddExit("west", hotSprings);
+            plantExterior.AddExit("south", separator);
+
             // --- Add Items ---
             // Solar
             // Desert Key in MaintTent (visible after quiz completion)
@@ -180,6 +206,9 @@ namespace ProjectAurora.Domain
             
             // Shed Key - Given by Kael.
 
+            // Geothermal
+            steamVents.AddItem(new Item("thermal_data", "Thermal readings showing 180°C at 2km depth."));
+
             StartingRoom = hub;
             
             // Add to list
@@ -211,6 +240,12 @@ namespace ProjectAurora.Domain
             _rooms.Add(tents);
             _rooms.Add(metalBox);
             _rooms.Add(computers);
+            // Geothermal
+            _rooms.Add(steamVents);
+            _rooms.Add(hotSprings);
+            _rooms.Add(observatory);
+            _rooms.Add(separator);
+            _rooms.Add(plantExterior);
 
             return StartingRoom!;
         }

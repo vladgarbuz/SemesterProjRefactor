@@ -17,6 +17,11 @@ namespace ProjectAurora.Data
         public bool Step2Complete => GetFlag(nameof(Step2Complete));
         public bool WindyRestored => GetFlag(nameof(WindyRestored));
 
+        // Geothermal
+        public bool TalkedToRodriguez => GetFlag(nameof(TalkedToRodriguez));
+        public bool HasThermalData => GetFlag(nameof(HasThermalData));
+        public bool GeothermalCertified => GetFlag(nameof(GeothermalCertified));
+
         public GameState()
         {
             // Defaults are false by default (dictionary starts empty)
@@ -47,5 +52,10 @@ namespace ProjectAurora.Data
         public void MarkStep1Complete() => SetFlag(nameof(Step1Complete));
         public void MarkStep2Complete() => SetFlag(nameof(Step2Complete));
         public void MarkWindyRestored() => SetFlag(nameof(WindyRestored));
+
+        // Geothermal
+        public void MarkTalkedToRodriguez() => SetFlag(nameof(TalkedToRodriguez));
+        public void MarkHasThermalData() => SetFlag(nameof(HasThermalData));
+        public void MarkGeothermalCertified() => SetFlag(nameof(GeothermalCertified));
     }
 }

@@ -1,16 +1,19 @@
 namespace ProjectAurora.Domain
 {
-    public class SolarQuiz : IQuiz
+    public class SolarQuiz : IMultiQuestionQuiz
     {
-        public string Question { get; }
-        public string[] Options { get; }
-        public int CorrectAnswer { get; }
-
-        public SolarQuiz()
+        public string[] Questions { get; } = new[]
         {
-            Question = "What happens if solar panels overheat?";
-            Options = new[] { "More energy", "Less efficiency", "Catch fire" };
-            CorrectAnswer = 2; // 'Less efficiency'
-        }
+            "What happens if solar panels overheat?"
+        };
+
+        public string[][] Options { get; } = new[]
+        {
+            new[] { "More energy", "Less efficiency", "Catch fire" }
+        };
+
+        public int[] CorrectAnswers { get; } = new[] { 2 };  // 1-indexed: 'Less efficiency'
+
+        public int PassThreshold { get; } = 1;  // Need 1 out of 1 correct
     }
 }

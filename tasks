@@ -1,232 +1,107 @@
-Steam Vents (3)
-                    [Thermal Data]
-                          |
-                          |
-                    Observatory (2) --------- Monitoring Well (4)
-                    [Dr. Voss]                [Equipment Parts]
-                          |                            |
-                          |                            |
-    Greenhouse (9) - Village (8) - ENTRANCE (1) - Hot Springs (5)
-    [Farmer Diego]   [Mayor Chen]   [START]          [Kenji]
-                          |                            |
-                          |                            |
-                   Control Room (7) ----------- Separator (6)
-                   [QUIZ: Lisa]              [MINIGAME: James]
-                                                       |
-                                                       |
-                                                   Plant (10)
-                                                  [Engineer]
-DETAILED NODE DESCRIPTIONS
-NODE 1: VOLCANIC PLAINS ENTRANCE (Starting Point)
-Connections:
+# VOLCANIC PLAINS - GEOTHERMAL ENERGY GAME SPECIFICATION
 
-North → Observatory
-South → Village
-East → Hot Springs
-West → Control Room
+## MAP STRUCTURE
 
-NPCs: None
-Items: None
-Description:
-"You stand at the entrance to the Volcanic Plains. Heat shimmers rise from dark basalt rocks in all directions. To the north, you see a research station. To the east, steam rises from natural pools. To the south, a small village nestles in the valley. To the west, you hear the hum of machinery."
-First-time hint: "The geothermal facility sprawls across this volcanic landscape. Multiple paths lead to different parts of the operation. Exploration will reveal how everything connects."
+```
+                         Steam Vents
+                              |
+                              |
+                              |
+            Plant --------- Hot Springs
+              |                  |
+              |                  |
+              |                  |
+          Separator --------- Observatory
+```
 
-NORTH-EAST BRANCH (Research Zone)
-NODE 2: THERMAL OBSERVATORY
-Connections:
+## NODE CONNECTIONS
 
-South → Entrance
-North → Steam Vents
-East → Monitoring Well
+**Node 1: Steam Vents (START)**
+- South → Hot Springs
 
-NPCs: Dr. Elena Voss
-Items: None
-Description:
-"A monitoring station built on a rocky outcrop. Scientific equipment measures ground temperature and seismic activity. Through the eastern window, you spot another facility - a monitoring well with drilling equipment. To the north, steam plumes rise from ancient vents."
-NPC: Dr. Elena Voss (Geologist)
+**Node 2: Hot Springs**
+- North → Steam Vents
+- South → Observatory
+- West → Plant
 
-Command: talk
-Dialogue: "Welcome! I study thermal activity here. The Steam Vents to the north are incredible - 180°C at just 2km depth! I also maintain the Monitoring Well to the east. If you collect thermal data from the vents, it would help map the entire reservoir system. Both facilities are connected to my research."
+**Node 3: Observatory**
+- North → Hot Springs
+- West → Separator
 
+**Node 4: Separator Station**
+- North → Plant
+- East → Observatory
 
-NODE 3: ANCIENT STEAM VENTS
-Connections:
+**Node 5: Plant Exterior**
+- East → Hot Springs
+- South → Separator
 
-South → Observatory
+## LOCATIONS
 
-NPCs: None
-Items: thermal_data (on ground)
-Description:
-"Natural geysers erupt periodically, sending towers of steam skyward. The ground is fractured with mineral deposits in brilliant colors. This is the northern edge of the geothermal reservoir - the hottest point in the region. The air is thick with sulfur and heat."
-Interactive Elements:
+### Node 1: Ancient Steam Vents
+**Description:** "Natural geysers erupt, sending steam skyward. The ground is fractured with colorful mineral deposits. This is the hottest point in the volcanic plains."
+**Item:** thermal_data
+**Action:** `take thermal_data` → "You collect thermal data. Readings show 180°C at 2km depth."
 
-Command: take thermal_data
-Response: "You carefully measure the temperature and pressure. The readings are extraordinary - this northern reservoir connects underground to the entire system. The data device records everything."
+### Node 2: Natural Hot Springs
+**Description:** "Steaming pools of turquoise water surrounded by white terraces. The water is heated by geothermal energy below."
+**NPC:** Kenji
+**Dialogue:** "These springs have been here for generations. The power plant taps deeper reservoirs - the springs remain untouched. Perfect balance between energy and nature."
 
+### Node 3: Thermal Observatory
+**Description:** "A monitoring station on volcanic rock. Equipment measures ground temperature and seismic activity. Digital displays show thermal maps of underground reservoirs."
+**NPC:** Dr. Elena Voss
+**Dialogue (before thermal_data):** "I study thermal activity here. The Steam Vents show incredible heat at 2km depth! Collect thermal data from there to help our research."
+**Dialogue (after thermal_data):** "Excellent! The data shows this reservoir can provide sustainable energy for decades. Geothermal heat keeps regenerating naturally."
+**Action:** `use permit` → Start quiz
 
-NODE 4: MONITORING WELL
-Connections:
+### Node 4: Steam Separator Station
+**Description:** "A facility where superheated brine separates into steam and water. Large pressure vessels dominate the space. Steam drives turbines while water is reinjected underground."
+**NPC:** James
+**Dialogue:** "This separator is the heart of the operation. We extract steam, generate power, then reinject water to maintain the reservoir. The system runs 24/7, unlike solar or wind."
 
-West → Observatory
-South → Hot Springs
-East → (blocked - "Dense volcanic rock blocks passage east")
+### Node 5: Geothermal Plant Exterior
+**Description:** "The main facility with cooling towers and turbine buildings. This plant generates 50 megawatts of constant renewable power."
+**NPC:** Chief Engineer Rodriguez
+**Dialogue (first visit):** "Welcome! This plant generates 50 megawatts constantly. Geothermal never stops, unlike solar or wind. Here's your permit - take the certification quiz at the observatory."
+**Action (auto):** Give permit to player
+**Dialogue (subsequent):** "Geothermal connects everything - natural heat, monitoring, processing, and generation. You're seeing the complete cycle of sustainable energy."
 
-NPCs: None
-Items: equipment_parts (on ground)
-Description:
-"A narrow borehole descends deep into the earth, surrounded by monitoring equipment and sensors. Cables run south toward the Hot Springs area. This well measures reservoir pressure and temperature at multiple depths. Some spare equipment parts lie near the wellhead."
-Interactive Elements:
+## QUIZ (Observatory)
 
-Command: take equipment_parts
-Response: "You pick up the spare sensor parts. These might be useful at the separator station - equipment there is always in need of maintenance."
-Note: Taking equipment_parts makes minigame slightly easier (reduces required attempts from 3 to 5)
+**Trigger:** `use permit` at Node 3
 
+**Question 1:** "What is the main advantage of geothermal energy over solar and wind?"
+- A) Cheaper to build
+- B) Provides constant 24/7 power ✓
+- C) Uses less land
+- D) Easier to maintain
 
-EAST-SOUTH BRANCH (Natural Features & Processing)
-NODE 5: NATURAL HOT SPRINGS
-Connections:
+**Question 2:** "What happens to the water after it's used in a geothermal plant?"
+- A) Released into rivers
+- B) Reinjected back underground ✓
+- C) Evaporated completely
+- D) Stored in tanks
 
-West → Entrance
-North → Monitoring Well
-South → Separator Station
+**Question 3:** "At what depth do geothermal plants typically access hot water?"
+- A) 100-500 meters
+- B) 1-3 kilometers ✓
+- C) 5-10 kilometers
+- D) 20+ kilometers
 
-NPCs: Kenji
-Items: None
-Description:
-"Steaming pools of turquoise water create a natural spa. The water is heated by the same geothermal reservoir that powers the plant. Pipes run south toward the industrial facilities, while monitoring equipment connects north to the well. This location sits above a major intersection of underground thermal channels."
-NPC: Kenji (Spring Keeper)
+**Pass Requirement:** 2 out of 3 correct
+**Reward:** geothermal_certificate
 
-Command: talk
-Dialogue: "These springs have been here for generations. The power plant taps deeper reservoirs - the springs remain pristine. See how the monitoring well to the north connects here? The entire system is mapped. Water flows naturally, and we harness just a fraction of its energy."
+## INVENTORY ITEMS
 
+1. **permit** - Given by Rodriguez at Plant
+2. **thermal_data** - Collected at Steam Vents
+3. **geothermal_certificate** - Earned from quiz at Observatory
 
-NODE 6: STEAM SEPARATOR STATION
-Connections:
+## VICTORY CONDITIONS
 
-North → Hot Springs
-South → Plant Exterior
-West → Control Room
+Player must obtain both:
+1. thermal_data
+2. geothermal_certificate
 
-NPCs: James
-Items: None
-Description:
-"A critical facility where superheated brine is separated into steam and water. Large pressure vessels dominate the space. Pipes connect north to the hot springs reservoir, south to the main plant, and west to the control systems. This is where raw geothermal heat becomes manageable energy."
-NPC: James (Plant Operator)
-
-Command: talk
-Dialogue (before permit): "This separator is the heart of the operation. It connects to the control room to the west and the main plant to the south. Only authorized personnel can adjust the settings."
-Dialogue (after permit, before minigame): "You have clearance! The separator needs optimization. Can you adjust the pressure and temperature controls?"
-Command: use permit (triggers minigame)
-
-MINIGAME - Separator Optimization:
-
-Objective: Adjust pressure to 75 bar and temperature to 180°C
-Starting values: 50 bar, 150°C
-Commands:
-
-pressure +10/+5/-5/-10
-temperature +10/+5/-5/-10
-apply - Submit settings
-
-
-Success range: Pressure 70-80 bar, Temperature 175-185°C
-Attempts: 3 (or 5 if player has equipment_parts)
-Reward: optimization_certificate
-Hint if player has equipment_parts: "The spare parts you brought help calibrate the sensors more accurately. You have extra attempts to get it right."
-
-
-NODE 10: GEOTHERMAL PLANT EXTERIOR
-Connections:
-
-North → Separator Station
-West → (blocked - "Security fence blocks western passage")
-
-NPCs: Chief Engineer Rodriguez
-Items: permit, toolkit (given by NPC)
-Description:
-"The main facility with cooling towers and turbine buildings. This is the southern anchor of the geothermal operation. From here, processed steam from the separator (to the north) drives the turbines. The entire system comes together in this building."
-NPC: Chief Engineer Rodriguez
-
-Command: talk
-First conversation: "Welcome! This plant generates 50 megawatts constantly. The separator feeds us steam from the north, which connects to the hot springs reservoir, which connects to the monitoring systems. It's all one integrated system. Here's your permit and toolkit - explore and learn how it all works together."
-
-Auto-give: permit and toolkit
-
-
-Subsequent: "The beauty of geothermal is how everything connects - natural reservoirs, monitoring, processing, and generation. You're seeing the whole picture now."
-
-
-WEST-SOUTH BRANCH (Control & Community)
-NODE 7: CENTRAL CONTROL ROOM
-Connections:
-
-East → Entrance
-North → Village
-Southeast → Separator Station
-
-NPCs: Lisa
-Items: None
-Description:
-"The nerve center monitoring all systems. Screens display data from the observatory, monitoring well, hot springs sensors, separator, and plant. You can see how information flows from every location. This room connects to the village to the north and has a direct line to the separator to the southeast."
-NPC: Lisa (Control Engineer)
-
-Command: talk
-Dialogue (without permit): "The control room receives data from every part of the facility. I can see the entire network from here. Only certified personnel can access the systems."
-Dialogue (with permit): "Ready for your certification? The quiz tests your understanding of how all these connected systems work together."
-Command: use permit (triggers quiz)
-
-QUIZ - Geothermal Certification:
-Question 1: "What is the main advantage of geothermal energy over solar and wind?"
-
-A) Cheaper to build
-B) Provides constant 24/7 power ✓
-C) Uses less land
-D) Easier to maintain
-
-Question 2: "What happens to the water after it's used in a geothermal plant?"
-
-A) Released into rivers
-B) Reinjected back underground ✓
-C) Evaporated completely
-D) Stored in tanks
-
-Question 3: "At what depth do geothermal plants typically access hot water?"
-
-A) 100-500 meters
-B) 1-3 kilometers ✓
-C) 5-10 kilometers
-D) 20+ kilometers
-
-Reward: geothermal_certificate
-
-WEST BRANCH (Community Zone)
-NODE 8: THERMAL VILLAGE
-Connections:
-
-North → Entrance
-South → Control Room
-West → Greenhouse
-
-NPCs: Mayor Chen
-Items: None
-Description:
-"A small community heated by the geothermal system. Steam pipes run south to the control room and connect to the broader network. To the west, you see a large greenhouse glowing in the twilight. The village sits at the intersection of energy production and community benefit."
-NPC: Mayor Chen
-
-Command: talk
-Dialogue: "Our village connects directly to the control systems to the south. We receive both electricity and heating from the network. The greenhouse to the west uses the same heat. We're part of the integrated system - not just customers, but participants in sustainable energy."
-
-
-NODE 9: GEOTHERMAL GREENHOUSE
-Connections:
-
-East → Village
-
-NPCs: Farmer Diego
-Items: None
-Description:
-"A lush glass structure at the western edge of the facility. Tropical plants thrive on waste heat from the power system. This is the furthest point from the steam vents, yet Earth's heat still reaches here through the network of pipes and systems. The end point of the energy journey."
-NPC: Farmer Diego
-
-Command: talk
-Dialogue: "I'm at the end of the line - west of the village, far from the vents and the plant. But the heat still reaches me perfectly. That shows how well-designed this system is. The same heat that starts as steam in the north becomes productive energy here in the west. Every bit is used."
+**Victory Message:** "Congratulations! You've mastered the fundamentals of geothermal energy. You understand how Earth's natural heat provides clean, constant, renewable power for humanity's sustainable future."

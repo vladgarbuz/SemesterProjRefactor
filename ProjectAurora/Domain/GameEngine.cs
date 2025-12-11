@@ -15,7 +15,7 @@ namespace ProjectAurora.Domain
         
         // Delegate for UI callbacks (like QTE or Quiz)
         public System.Func<ProjectAurora.Domain.IQte, bool>? RunHydroQTE { get; set; }
-        public System.Func<ProjectAurora.Domain.IQuiz, int>? RunSolarQuiz { get; set; }
+        public System.Func<ProjectAurora.Domain.IMultiQuestionQuiz, int>? RunQuiz { get; set; }
         
         private Room _hub;
 
@@ -241,7 +241,7 @@ namespace ProjectAurora.Domain
 ================================================================================
 
 OBJECTIVE:
-  Restore power to the three regions: Solar Desert, Hydro Hub, and Windy Highlands.
+  Restore power to the four regions: Solar Desert, Hydro Hub, Windy Highlands, and Volcanic Plains.
   Return to the Aurora Control Hub once all systems are online.
 
 COMMANDS:
@@ -265,35 +265,40 @@ Type 'map' to display the world map.
         {
             // Map template with placeholders showing correct room connections
             string mapTemplate = @"
-+-----------------------------------------------------------------------------+
-|                           PROJECT AURORA MAP                                |
-+-----------------------------------------------------------------------------+
-|                                              [{LIBR}]                       |
-|                                                 |                           |
-|                                              [{RSRC}]-[{CAFE}]              |
-|                                                 |                           |
-|         [{HILL}]                                |          [{CTRL}]         |
-|            |                                    |             |             |
-|         [{TUND}]-----------------------------[{HHUB}]----[{DAM_}]           |
-|                                                 |                           |
-|[{TENT}]          [{FILD}]                      |                            |
-|    |                 |                          |                           |
-|    +-------------[{DHUB}]----[{SOLR}]-------[{HUB_}]                       |
-|                      |                          |                           |
-|         [{WATR}]-[{JUNK}]-[{SCP2}]              |                           |
-|                      |                          |              [{SHED}]     |
-|                   [{SCP1}]                   [{BORL}]             |         |
-|                                                 |                 |         |
-|                                              [{CABN}]----------[{GARD}]     |
-|                                                                   |         |
-|                                                                   |   [{COMP}]
-|                                                                   |      |
-|[{TNTS}]                                                        [{TURB}]--[{TOWR}]-[{OFFC}]
-|   |                                                               |
-|[{STRM}]-----------------------------------------------------------+
-|                                                                   |
-|                                                                [{MBOX}]
-+-----------------------------------------------------------------------------+";
++---------------------------------------------------------------------------------------------+
+|                                   PROJECT AURORA MAP                                        |
++---------------------------------------------------------------------------------------------+
+|                                                                                             |
+|                                    [{LIBR}]                                                 |
+|                                       |                                                     |
+|                                    [{RSRC}]--[{CAFE}]                                       |
+|                                       |                                                     |
+|          [{HILL}]                     |         [{CTRL}]                                    |
+|             |                         |            |                                        |
+|          [{TUND}]-----------------[{HHUB}]------[{DAM_}]                                    |
+|                                       |                                                     |
+|                                       |                                                     |
+|                                       |                                                     |
+| [{TENT}]         [{FILD}]             |                              [{VENT}]               |
+|    |                |                 |                                 |                   |
+|    +------------[{DHUB}]--[{SOLR}]----+----[{HUB_}]----[{HSPR}]------[{PLNT}]               |
+|                    |                          |           |             |                   |
+|       [{WATR}]--[{JUNK}]--[{SCP2}]            |        [{OBSR}]------[{SEPR}]               |
+|                    |                          |                                             |
+|                 [{SCP1}]                      |                                             |
+|                                               |                                             |
+|                                            [{BORL}]         [{SHED}]                        |
+|                                               |                |                            |
+|                                            [{CABN}]---------[{GARD}]                        |
+|                                                                |                            |
+|                                                                |                            |
+|                                       [{TNTS}]                 |        [{COMP}]            |
+|                                          |                     |           |                |
+|                                       [{STRM}]--------------[{TURB}]----[{TOWR}]--[{OFFC}]  |
+|                                                                |                            |
+|                                                             [{MBOX}]                        |
+|                                                                                             |
++---------------------------------------------------------------------------------------------+";
 
             // Map Room IDs to Placeholders
             var placeholders = new Dictionary<string, string>
@@ -325,7 +330,13 @@ Type 'map' to display the world map.
                 { "Stream", "{STRM}" },
                 { "Tents", "{TNTS}" },
                 { "MetalBox", "{MBOX}" },
-                { "Computers", "{COMP}" }
+                { "Computers", "{COMP}" },
+                // Geothermal
+                { "SteamVents", "{VENT}" },
+                { "HotSprings", "{HSPR}" },
+                { "Observatory", "{OBSR}" },
+                { "Separator", "{SEPR}" },
+                { "PlantExterior", "{PLNT}" }
             };
 
             // Define labels for each room ID (6 chars each)
@@ -358,7 +369,13 @@ Type 'map' to display the world map.
                 { "Stream", "STREAM" },
                 { "Tents", "TENTS " },
                 { "MetalBox", "M.BOX " },
-                { "Computers", "COMPRS" }
+                { "Computers", "COMPRS" },
+                // Geothermal
+                { "SteamVents", "VENTS " },
+                { "HotSprings", "H.SPRG" },
+                { "Observatory", "OBSRVY" },
+                { "Separator", "SEPRAT" },
+                { "PlantExterior", "PLANT " }
             };
 
             var sb = new StringBuilder(mapTemplate);
@@ -400,9 +417,10 @@ Type 'map' to display the world map.
             if (Player.CurrentRoom.ID == "Hub" && 
                 State.SolarFixed && 
                 State.QteComplete && 
-                State.WindyRestored)
+                State.WindyRestored &&
+                State.GeothermalCertified)
             {
-                Print("CONGRATULATIONS! You have restored power to all three regions. Project Aurora is a success!");
+                Print("CONGRATULATIONS! You have restored power to all four regions. You understand how Earth's natural heat provides clean, constant, renewable power for humanity's sustainable future. Project Aurora is a success!");
                 IsRunning = false;
             }
         }
