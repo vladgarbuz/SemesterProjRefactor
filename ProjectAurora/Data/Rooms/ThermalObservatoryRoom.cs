@@ -17,7 +17,7 @@ namespace ProjectAurora.Data.Rooms
                     return true;
                 }
 
-                engine.Print("You submit the thermal data to Dr. Elena Voss for analysis.");
+                engine.Print("You submit the thermal data to Dr. Elena Voss for analysis. You can now use your permit to take the quiz.");
                 player.RemoveItem("thermal data");
                 state.MarkThermalDataSubmitted();
                 return true;
