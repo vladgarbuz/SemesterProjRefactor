@@ -154,20 +154,20 @@ namespace ProjectAurora.Domain
             // Geothermal Connections
             // Based on spec: SteamVents <-> HotSprings <-> Plant, HotSprings <-> Observatory <-> Separator <-> Plant
             hotSprings.AddExit("west", hub);  // Back to hub
-            hotSprings.AddExit("north", steamVents);
             hotSprings.AddExit("south", observatory);
             hotSprings.AddExit("east", plantExterior);
 
-            steamVents.AddExit("south", hotSprings);
+            steamVents.AddExit("south", plantExterior);
 
             observatory.AddExit("north", hotSprings);
-            observatory.AddExit("west", separator);
+            observatory.AddExit("east", separator);
 
-            separator.AddExit("east", observatory);
+            separator.AddExit("west", observatory);
             separator.AddExit("north", plantExterior);
 
             plantExterior.AddExit("west", hotSprings);
             plantExterior.AddExit("south", separator);
+            plantExterior.AddExit("north", steamVents);
 
             // --- Add Items ---
             // Solar
