@@ -170,7 +170,6 @@ The game features an in-game map command that displays your current location:
 - Your current location is highlighted in RED when using the in-game `map` command
 - Use cardinal directions (north, south, east, west) to navigate
 - Some connections require specific items or completing quests
-- FLD* = Solar Panel Fields (region completion location)
 
 ---
 
@@ -213,6 +212,7 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
     *   `north` -> Hydro Hub
     *   `west` -> Solar Desert
     *   `south` -> Mount Boreal (Windy Highlands)
+    *   `east` -> Hot Springs (Geothermal Plains)
 
 ---
 
