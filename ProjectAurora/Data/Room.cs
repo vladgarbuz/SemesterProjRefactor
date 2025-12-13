@@ -10,7 +10,7 @@ namespace ProjectAurora.Data
 
         public string ID { get; }
         public string Name { get; }
-        public string Description { get; }
+        public string Description { get; protected set; }
         public IReadOnlyDictionary<string, Room> Exits => _exits;
         public IReadOnlyList<Item> Items => _items.AsReadOnly();
         public bool IsLocked { get; private set; }

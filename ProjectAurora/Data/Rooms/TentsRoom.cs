@@ -13,8 +13,9 @@ namespace ProjectAurora.Data.Rooms
             {
                 state.MarkFedRaccoon();
                 player.RemoveItem("snack");
-                player.AddItem(new ProjectAurora.Data.Items.RepairItem("control board", "A small control board."));
-                engine.Print("You fed the raccoon. It dropped the control board!");
+                // Drop the control board in the room instead of giving it to the player
+                this.AddItem(new ProjectAurora.Data.Items.RepairItem("control board", "A small control board."));
+                engine.Print("You fed the raccoon. It dropped the control board! (take control board)");
                 return true;
             }
             return false;

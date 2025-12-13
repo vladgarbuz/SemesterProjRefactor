@@ -408,7 +408,6 @@ Type 'map' to display the world map.
             sb.AppendLine();
             sb.AppendLine("  * Your current location is highlighted in RED");
             sb.AppendLine("  * Use cardinal directions (north, south, east, west).");
-            sb.AppendLine("  * Rooms marked with * require talking to an NPC first.");
             Print(sb.ToString());
         }
         

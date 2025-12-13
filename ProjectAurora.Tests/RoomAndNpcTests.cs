@@ -463,5 +463,130 @@ namespace ProjectAurora.Tests
             
             Assert.DoesNotContain("Rodriguez", engine.OutputMessage);
         }
-    }
+        // --- Windy Region Tests ---
+
+        [Fact]
+        public void Shed_RequiresShedKeyToEnter()
+        {
+            var shed = new Room("Shed", "Shed", "Old shed") 
+            { 
+                EntryRequirement = new KeyRequirement("Shed Key", consumeKey: true) 
+            };
+            var engine = new GameEngine();
+            var player = new Player(new Room("X", "X", "X"));
+            var state = engine.State;
+
+            // Cannot enter without key
+            Assert.False(shed.EntryRequirement.CanEnter(player, state));
+
+            // Give player Shed Key
+            player.AddItem(new KeyItem("Shed Key", "A rusty key"));
+            
+            // Can enter with key
+            Assert.True(shed.EntryRequirement.CanEnter(player, state));
+
+            // Key is consumed on first entry
+            shed.EntryRequirement.OnEnter(player, state, engine);
+            Assert.False(player.HasItem("Shed Key"));
+            
+            // But door remains unlocked for future entries
+            Assert.True(shed.EntryRequirement.CanEnter(player, state));
+        }
+
+        [Fact]
+        public void TowerRoom_FlimsyCables_OnlyVisibleWithShedKey()
+        {
+            var tower = new TowerRoom("Tower", "Tower", "Control tower");
+            var engine = new GameEngine();
+            var player = new Player(tower);
+            var state = engine.State;
+
+            // Try to take flimsy cables without Shed Key
+            engine.ClearOutput();
+            tower.OnTakeItem("flimsy cables", player, state, engine);
+            Assert.Contains("can't get that", engine.OutputMessage);
+            Assert.False(player.HasItem("flimsy cables"));
+
+            // Give player Shed Key
+            player.AddItem(new KeyItem("Shed Key", "A rusty key"));
+
+            // Now can take flimsy cables
+            engine.ClearOutput();
+            tower.OnTakeItem("flimsy cables", player, state, engine);
+            Assert.True(player.HasItem("flimsy cables"));
+            Assert.Contains("took", engine.OutputMessage);
+        }
+
+        [Fact]
+        public void GardenRoom_CodeAppearsAfterVisitingMetalBox()
+        {
+            var garden = new GardenRoom("Garden", "Garden", "Overgrown garden");
+            var engine = new GameEngine();
+            var player = new Player(garden);
+            var state = engine.State;
+
+            // Code not visible before visiting metal box
+            Assert.False(state.BoxVisited);
+            engine.ClearOutput();
+            garden.OnEnter(player, state, engine);
+            Assert.Empty(garden.Items);
+
+            // Mark box as visited
+            state.MarkBoxVisited();
+
+            // Code appears after visiting metal box
+            engine.ClearOutput();
+            garden.OnEnter(player, state, engine);
+            Assert.Single(garden.Items);
+            Assert.Contains(garden.Items, i => i.Name == "code");
+            Assert.Contains("piece of paper", engine.OutputMessage);
+        }
+
+        [Fact]
+        public void TentsRoom_RaccoonDropsControlBoardWhenFedSnack()
+        {
+            var tents = new TentsRoom("Tents", "Tents", "Old tents");
+            var engine = new GameEngine();
+            var player = new Player(tents);
+            var state = engine.State;
+
+            // Give player snack
+            player.AddItem(new ConsumableItem("snack", "A snack"));
+
+            // Use snack on raccoon
+            var snack = player.Inventory.First(i => i.Name == "snack");
+            var handled = tents.OnUseItem(snack, player, state, engine);
+
+            // Verify results
+            Assert.True(handled);
+            Assert.True(state.FedRaccoon);
+            Assert.False(player.HasItem("snack"));
+            Assert.Contains(tents.Items, i => i.Name == "control board");
+            Assert.Contains("dropped the control board", engine.OutputMessage);
+        }
+
+        [Fact]
+        public void ProfKael_DropsShedKeyInRoom_NotInInventory()
+        {
+            var office = new Room("Office", "Office", "Administration office");
+            var prof = new ProjectAurora.Domain.NPCs.ProfKael();
+            var engine = new GameEngine();
+            var player = new Player(office);
+            var state = engine.State;
+
+            // Talk to Prof Kael without having parts
+            engine.ClearOutput();
+            prof.Talk(player, state, engine.Print, engine);
+
+            // Key should be in the room, not in player inventory
+            Assert.False(player.HasItem("Shed Key"));
+            Assert.Contains(office.Items, i => i.Name == "Shed Key");
+            Assert.Contains("drops the Shed Key", engine.OutputMessage);
+
+            // Talking again should not drop another key
+            int itemCount = office.Items.Count;
+            engine.ClearOutput();
+            prof.Talk(player, state, engine.Print, engine);
+            Assert.Equal(itemCount, office.Items.Count);
+        }    }
 }

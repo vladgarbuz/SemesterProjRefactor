@@ -16,9 +16,8 @@ namespace ProjectAurora.Data.Rooms
                 // Consumed when used
                 if (player.HasItem("Water Hose"))
                     player.RemoveItem("Water Hose");
-                engine.Print("Temporary fix applied. Solar Desert saved (barely).");
+                engine.Print("Temporary fix applied. Solar Desert saved (barely). You can now return to the Desert Hub.");
                 state.SetSolarFixed();
-                engine.ReturnToHub();
                 return true;
             }
             // Check if this is a repair item for robotic parts (more robust than bare substring)
@@ -26,9 +25,8 @@ namespace ProjectAurora.Data.Rooms
             {
                 if (player.HasItem("Robotic Parts 1") && player.HasItem("Robotic Parts 2"))
                 {
-                    engine.Print("Robotic maintenance complete. Saved the Solar Desert!");
+                    engine.Print("Robotic maintenance complete. Saved the Solar Desert! You can now return to the Desert Hub.");
                     state.SetSolarFixed();
-                    engine.ReturnToHub();
                     // Consume parts when used
                     if (player.HasItem("Robotic Parts 1")) player.RemoveItem("Robotic Parts 1");
                     if (player.HasItem("Robotic Parts 2")) player.RemoveItem("Robotic Parts 2");

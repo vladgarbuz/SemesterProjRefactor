@@ -1,4 +1,5 @@
 using ProjectAurora.Data;
+using System.Linq;
 
 namespace ProjectAurora.Domain.NPCs
 {
@@ -21,14 +22,18 @@ namespace ProjectAurora.Domain.NPCs
             }
             else
             {
-                if (!player.HasItem("Shed Key"))
+                if (!player.HasItem("Shed Key") && !player.CurrentRoom.Items.Any(i => i.Name == "Shed Key"))
                 {
-                        player.AddItem(new ProjectAurora.Data.Item("Shed Key", "Key to the shed."));
-                    print("Prof. Kael: 'I need parts. Here is the Shed Key.'");
+                    player.CurrentRoom.AddItem(new ProjectAurora.Data.Items.KeyItem("Shed Key", "A rusty key labeled 'Shed'."));
+                    print("Prof. Kael: 'I need parts to fix the turbine. Here, take this key to the shed, you might find something useful there. Please find an anemometer, a control board, and some sturdy power cables.' (Prof. Kael drops the Shed Key)");
+                }
+                else if (player.HasItem("Shed Key"))
+                {
+                    print("Prof. Kael: 'I need parts to fix the turbine. Please find an anemometer, a control board, and some sturdy power cables.'");
                 }
                 else
                 {
-                    print("Prof. Kael: 'Bring me the parts!'");
+                    print("Prof. Kael: 'I need parts to fix the turbine. The key to the shed is on the floor if you need it. Please find an anemometer, a control board, and some sturdy power cables.'");
                 }
             }
         }

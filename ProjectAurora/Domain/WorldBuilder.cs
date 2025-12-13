@@ -22,7 +22,7 @@ namespace ProjectAurora.Domain
             var hub = new Room("Hub", "Aurora Control Hub", "You are in the Aurora Control Hub, the heart of the last renewable energy initiative. The air hums with faint backup power. Screens flicker, showing maps of four darkened regions. A workbench lies in the corner with scattered tools.");
 
             // Solar Region
-            var solarDesert = new Room("SolarDesert", "Solar Desert", "After walking for hours you find yourself in a desolate land. The desert stretches before you. Towers of sand cover the solar field. Heat shimmers across the horizon. You find a small hub that looks like it could have life(west)");
+            var solarDesert = new ProjectAurora.Data.Rooms.SolarDesertRoom("SolarDesert", "Solar Desert", "You are in the vast Solar Desert. The sun beats down on the sand. To the west lies the Desert Hub, and to the east is the Aurora Control Hub.");
             var desertHub = new Room("DesertHub", "Desert Hub", "You notice a map in front of the hub with the areas in the desert: Maintenance tent (west), Aurora Hub (east), Solar panel field (north), Junkyard (south). You decide to enter and there you find Dr. Liora Sunvale. She welcomes you and is ready to answer your questions. (talk)") { Occupant = new ProjectAurora.Domain.NPCs.DrLiora() };
             var maintTent = new ProjectAurora.Data.Rooms.MaintTentRoom("MaintTent", "Maintenance Tent", "You are inside the maintenance tent. Various tools are scattered about. In the corner sits a wooden box labeled 'Junkyard'.") { EntryRequirement = new TalkedToRequirement("Dr. Liora") };
             var solarFields = new ProjectAurora.Data.Rooms.SolarFieldsRoom("SolarFields", "Solar Panel Fields", "You find yourself in the Solar Panel Fields and notice a lot of piles of sand. You try to dig into one and you find a solar panel. There are thousands of them. How will you clean up the piles: (1) Water Hose (unreliable) (2) Robotic maintenece") { EntryRequirement = new TalkedToRequirement("Dr. Liora") };
@@ -45,19 +45,19 @@ namespace ProjectAurora.Domain
             var mountBoreal = new Room("MountBoreal", "Mount Boreal", "You're standing atop the peak of Mount Boreal. To the south is a ridge path leading to an abandoned cabin.");
             var cabin = new Room("Cabin", "Cabin", "You've entered an old, abandoned cabin once used by maintenance crews. You can see old papers and spare parts scattered on the ground. To the east is a door which seems to lead to the garden. In a corner you can see a snack bar with wild berries, it could be useful. (take snack)");
             var garden = new ProjectAurora.Data.Rooms.GardenRoom("Garden", "Garden", "You're standing in the garden, now overgrown with weeds and bushes. You can feel the cold wind on your face. To the north is an old, half-broken shed. To the south you can see the turbines turning faintly in the distance.");
-            var shed = new Room("Shed", "Shed", "You are standing in the old shed. You can see a note on a desk nearby. (take note) You can see a bundle of cables under some boxes, they seem pretty sturdy. (take power cables)") { EntryRequirement = new KeyRequirement("Shed Key", consumeKey: false) };
+            var shed = new Room("Shed", "Shed", "You are standing in the old shed. You can see a note on a desk nearby. (take note) You can see a bundle of cables under some boxes, they seem pretty sturdy. (take power cables)") { EntryRequirement = new KeyRequirement("Shed Key", consumeKey: true) };
             var turbines = new Room("Turbines", "Turbines", "You are standing between the wind turbines. Some are turned off while others spin slowly. To the east is a control tower connected to the turbines; to the west you can hear a stream of water; to the south is a locked metal box that may contain something useful.") { Occupant = new ProjectAurora.Domain.NPCs.TurbinesOperator() };
             var tower = new ProjectAurora.Data.Rooms.TowerRoom("Tower", "Tower", "You've entered the control tower. You can hear a faint static sound in the background. To the north are some old computers faintly flickering. To the east is an office.");
             var office = new Room("Office", "Office", "You've entered what seems to be an administration office. You can see blueprints and written entries scattered across the floor. You can hear rustling from behind a bookshelf, maybe you should see who it is (talk).") { Occupant = new ProjectAurora.Domain.NPCs.ProfKael() };
             var stream = new Room("Stream", "Stream", "You are standing next to a stream of water. To the north you can see an abandoned bonfire with a few tents nearby.");
             var tents = new ProjectAurora.Data.Rooms.TentsRoom("Tents", "Tents", "You can see something moving in one of the tents. Mybe you should see what it is. (talk)") { Occupant = new ProjectAurora.Domain.NPCs.Raccoon() };
-            var metalBox = new Room("MetalBox", "Metal Box", "You're standing in front of the locked box. It seems to require a code to open.");
+            var metalBox = new ProjectAurora.Data.Rooms.MetalBoxRoom("MetalBox", "Metal Box", "You're standing in front of the locked box. It seems to require a code to open.");
             var computers = new Room("Computers", "Computers", "You see old computers faintly flickering.") { Occupant = new ProjectAurora.Domain.NPCs.ComputersTerminal() };
 
             // Geothermal Region (Volcanic Plains)
             var steamVents = new ProjectAurora.Data.Rooms.SteamVentsRoom("SteamVents", "Ancient Steam Vents", "Steam geysers erupt over mineral-rich fractures. Try taking the thermal data.");
             var hotSprings = new Room("HotSprings", "Natural Hot Springs", "Steaming turquoise pools warmed by geothermal heat. NPC: Kenji (talk).") { Occupant = new ProjectAurora.Domain.NPCs.Kenji() };
-            var observatory = new ProjectAurora.Data.Rooms.ThermalObservatoryRoom("Observatory", "Thermal Observatory", "A monitoring station with instruments and thermal maps. Dr. Elena Voss wants to test you (use permit) and for you to bring her the data (use thermal data) NPC: Dr. Elena Voss (talk).") { Occupant = new ProjectAurora.Domain.NPCs.DrElenaVoss() };
+            var observatory = new ProjectAurora.Data.Rooms.ThermalObservatoryRoom("Observatory", "Thermal Observatory", "A monitoring station with instruments and thermal maps. NPC: Dr. Elena Voss (talk).") { Occupant = new ProjectAurora.Domain.NPCs.DrElenaVoss() };
             var separator = new Room("Separator", "Steam Separator Station", "Steam/water treatment with large pressure vessels and valves. NPC: James (talk).") { Occupant = new ProjectAurora.Domain.NPCs.James() };
             var plantExterior = new ProjectAurora.Data.Rooms.PlantExteriorRoom("PlantExterior", "Geothermal Plant Exterior", "Geothermal plant exterior with cooling towers and turbine buildings. NPC: Chief Rodriguez (talk).") { Occupant = new ProjectAurora.Domain.NPCs.ChiefRodriguez() };
 
@@ -78,6 +78,8 @@ namespace ProjectAurora.Domain
             desertHub.AddExit("west", maintTent); // Quiz handled on entry
             desertHub.AddExit("north", solarFields); // Locked initially
             desertHub.AddExit("south", junkyard); // Locked by key
+
+            solarFields.AddExit("south", desertHub);
 
             maintTent.AddExit("east", desertHub);
 
@@ -192,9 +194,9 @@ namespace ProjectAurora.Domain
             // Snack in Cabin
             cabin.AddItem(new ProjectAurora.Data.Items.ConsumableItem("snack", "A small packaged snack."));
             // Note, Power Cables in Shed
-            shed.AddItem(new Item("note", "It reads: 'One of the turbine parts was lost near the stream... I saw something furry running off with it.'"));
+            shed.AddItem(new Item("note", "A note that reads: 'One of the turbine parts was lost near the stream... I saw something furry running off with it. Check the tents.'"));
             shed.AddItem(new ProjectAurora.Data.Items.RepairItem("power cables", "A solid set of insulated power cables."));
-            // Code in Garden (conditional, but we can add it and hide it or just add it)
+            // Code in Garden - available after visiting metal box
             // Logic says "Only appears if box flag is true". We'll handle visibility in GameEngine or just add it and check flag on take.
             // For simplicity, we add it but maybe make it un-takeable until flag? Or just add it when flag is set.
             // Let's add it to the room but we might filter it out in description if not visible.

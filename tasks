@@ -1,107 +1,14 @@
-# VOLCANIC PLAINS - GEOTHERMAL ENERGY GAME SPECIFICATION
+1. Prof Kael requires 3 items from the user: anemometer, control board (racoon), power cables
+2. The note in the shed should hint to who stole the control board (racoon in tents)
+3. Shed key should be picked up manually by the user.
+4. "You found a raccoon! It seems to be playing with a control board. It looks hungry — maybe try feeding it a snack? (use snack)"
+5. The racoon should drop the control board after being fed. (take control board)
+6. "You fed the raccoon. It dropped the control board! (take control board)"
+7. The user should take a note from the garden with the code for the metal box. The code will be shown in the console for the user to see.
+8. The user should open the metal box using the code from the note and take the anemometer from inside. (use code, take anemometer)
+9. Use code should trigger a prompt for the user to enter the code. Use code will make the code dissapear from the inventory after being used.
 
-## MAP STRUCTURE
-
-```
-                         Steam Vents
-                              |
-                              |
-                              |
-            Plant --------- Hot Springs
-              |                  |
-              |                  |
-              |                  |
-          Separator --------- Observatory
-```
-
-## NODE CONNECTIONS
-
-**Node 1: Steam Vents (START)**
-- South → Hot Springs
-
-**Node 2: Hot Springs**
-- North → Steam Vents
-- South → Observatory
-- West → Plant
-
-**Node 3: Observatory**
-- North → Hot Springs
-- West → Separator
-
-**Node 4: Separator Station**
-- North → Plant
-- East → Observatory
-
-**Node 5: Plant Exterior**
-- East → Hot Springs
-- South → Separator
-
-## LOCATIONS
-
-### Node 1: Ancient Steam Vents
-**Description:** "Natural geysers erupt, sending steam skyward. The ground is fractured with colorful mineral deposits. This is the hottest point in the volcanic plains."
-**Item:** thermal_data
-**Action:** `take thermal_data` → "You collect thermal data. Readings show 180°C at 2km depth."
-
-### Node 2: Natural Hot Springs
-**Description:** "Steaming pools of turquoise water surrounded by white terraces. The water is heated by geothermal energy below."
-**NPC:** Kenji
-**Dialogue:** "These springs have been here for generations. The power plant taps deeper reservoirs - the springs remain untouched. Perfect balance between energy and nature."
-
-### Node 3: Thermal Observatory
-**Description:** "A monitoring station on volcanic rock. Equipment measures ground temperature and seismic activity. Digital displays show thermal maps of underground reservoirs."
-**NPC:** Dr. Elena Voss
-**Dialogue (before thermal_data):** "I study thermal activity here. The Steam Vents show incredible heat at 2km depth! Collect thermal data from there to help our research."
-**Dialogue (after thermal_data):** "Excellent! The data shows this reservoir can provide sustainable energy for decades. Geothermal heat keeps regenerating naturally."
-**Action:** `use permit` → Start quiz
-
-### Node 4: Steam Separator Station
-**Description:** "A facility where superheated brine separates into steam and water. Large pressure vessels dominate the space. Steam drives turbines while water is reinjected underground."
-**NPC:** James
-**Dialogue:** "This separator is the heart of the operation. We extract steam, generate power, then reinject water to maintain the reservoir. The system runs 24/7, unlike solar or wind."
-
-### Node 5: Geothermal Plant Exterior
-**Description:** "The main facility with cooling towers and turbine buildings. This plant generates 50 megawatts of constant renewable power."
-**NPC:** Chief Engineer Rodriguez
-**Dialogue (first visit):** "Welcome! This plant generates 50 megawatts constantly. Geothermal never stops, unlike solar or wind. Here's your permit - take the certification quiz at the observatory."
-**Action (auto):** Give permit to player
-**Dialogue (subsequent):** "Geothermal connects everything - natural heat, monitoring, processing, and generation. You're seeing the complete cycle of sustainable energy."
-
-## QUIZ (Observatory)
-
-**Trigger:** `use permit` at Node 3
-
-**Question 1:** "What is the main advantage of geothermal energy over solar and wind?"
-- A) Cheaper to build
-- B) Provides constant 24/7 power ✓
-- C) Uses less land
-- D) Easier to maintain
-
-**Question 2:** "What happens to the water after it's used in a geothermal plant?"
-- A) Released into rivers
-- B) Reinjected back underground ✓
-- C) Evaporated completely
-- D) Stored in tanks
-
-**Question 3:** "At what depth do geothermal plants typically access hot water?"
-- A) 100-500 meters
-- B) 1-3 kilometers ✓
-- C) 5-10 kilometers
-- D) 20+ kilometers
-
-**Pass Requirement:** 2 out of 3 correct
-**Reward:** geothermal_certificate
-
-## INVENTORY ITEMS
-
-1. **permit** - Given by Rodriguez at Plant
-2. **thermal_data** - Collected at Steam Vents
-3. **geothermal_certificate** - Earned from quiz at Observatory
-
-## VICTORY CONDITIONS
-
-Player must obtain both:
-1. thermal_data
-2. geothermal_certificate
-
-**Victory Message:** "Congratulations! You've mastered the fundamentals of geothermal energy. You understand how Earth's natural heat provides clean, constant, renewable power for humanity's sustainable future."
+1. When the user comes from the solar fields this message should be display "After walking for hours you find yourself in a desolate land. The desert stretches before you. Towers of sand cover the solar field. Heat shimmers across the horizon. You find a small hub that looks like it could have life(west)", from other directions there should be a different neutral message.
+2. The user should be able to go to solar fields and navigate back to the desert hub.
+3. The user should be asked what does he want to use in the solar fields to fix the solar panels. The user can either use 2 robotic parts (preffered - maximum efficiency) or water hose (less efficiency).
+4. The items get removed from the inventory after being used. A message should be displayed after using the items that everything is fixed in the Solar Desert zone and the user can go back to other zones.

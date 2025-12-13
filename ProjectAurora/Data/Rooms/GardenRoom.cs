@@ -13,11 +13,11 @@ namespace ProjectAurora.Data.Rooms
         {
             if (itemName.ToLower() == "code")
             {
-                if (state.BoxVisited && !player.HasItem("code"))
+                if (!player.HasItem("code"))
                 {
-                    var item = new Item("code", "A small piece of paper with the name 'Rigby' on it.");
+                    var item = new Item("code", "A small piece of paper with the code written on it.");
                     player.AddItem(item);
-                    engine.Print($"You took the {item.Name}.");
+                    engine.Print("You took the code. It reads: 'Rigby'.");
                     return true;
                 }
                 else
