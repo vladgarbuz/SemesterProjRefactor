@@ -46,55 +46,97 @@ The game uses a list-based inventory system to track items the player has collec
 ## 3. Region Specifications
 
 ### 3.0 World Map
+
+#### Conceptual Map
+The game world is organized around a central hub with four regions accessible via cardinal directions:
+
 ```mermaid
-graph TD
-    Hub[Aurora Control Hub] -->|North| Hydro[Hydro Hub]
-    Hub -->|West| Solar[Solar Desert]
-    Hub -->|South| Windy[Mount Boreal]
-    Hub -->|East| Geo[Hot Springs]
+graph TB
+    Hub[Aurora Control Hub]
     
-    subgraph Solar Region
-    Solar --> DesertHub
-    DesertHub --> Tent[Maintenance Tent]
-    DesertHub --> Fields[Solar Panel Fields]
-    DesertHub --> Junk[Junkyard]
-    Junk --> Water[Water Supplies]
-    Junk --> Scrap1[Scrapyard 1]
-    Junk --> Scrap2[Scrapyard 2]
-    end
-
-    subgraph Hydro Region
-    Hydro --> Dam[The Dam Plant]
-    Hydro --> Research[Research Center]
-    Hydro --> Forest[Tundra Forest]
-    Research --> Lib[Library]
-    Research --> Cafe[Cafeteria]
-    Forest --> Hill[Top of Hill]
-    Dam --> Control[Control Room]
-    end
-
-    subgraph Windy Region
-    Windy --> Cabin
-    Cabin --> Garden
-    Garden --> Shed
-    Garden --> Turbines
-    Turbines --> Tower
-    Turbines --> MetalBox
-    Turbines --> Stream
-    Stream --> Tents
-    Tower --> Office
-    Tower --> Computers
-    end
-
-    subgraph Geo Region
-    Geo --> HotSprings[Hot Springs]
-    HotSprings --> Observatory[Thermal Observatory]
-    HotSprings --> PlantExt[Geothermal Plant Exterior]
-    Observatory --> Separator[Steam Separator Station]
-    Separator --> PlantExt
-    PlantExt --> Vents[Ancient Steam Vents]
-    end
+    Hub -->|North| Hydro[Hydro Hub Region]
+    Hub -->|West| Solar[Solar Desert Region]
+    Hub -->|South| Windy[Windy Highlands Region]
+    Hub -->|East| Geo[Geothermal Region]
+    
+    style Hub fill:#f9f,stroke:#333,stroke-width:4px
+    style Hydro fill:#9cf,stroke:#333,stroke-width:2px
+    style Solar fill:#fc9,stroke:#333,stroke-width:2px
+    style Windy fill:#9f9,stroke:#333,stroke-width:2px
+    style Geo fill:#f99,stroke:#333,stroke-width:2px
 ```
+
+#### Detailed Region Connections
+
+**Solar Desert (West):**
+- Solar Desert ↔ Desert Hub ↔ Maintenance Tent
+- Desert Hub → Solar Panel Fields (north)
+- Desert Hub → Junkyard (south, requires Desert Key)
+- Junkyard branches to: Water Supplies, Scrapyard 1, Scrapyard 2
+
+**Hydro Hub (North):**
+- Hydro Hub ↔ The Dam Plant → Control Room (requires key)
+- Hydro Hub ↔ Research Center ↔ Library / Cafeteria
+- Hydro Hub ↔ Tundra Forest → Top of Hill
+
+**Windy Highlands (South):**
+- Mount Boreal → Cabin ↔ Garden
+- Garden → Shed (north, requires Shed Key) / Turbines (south)
+- Turbines branches to: Tower, Metal Box, Stream
+- Tower → Office / Computers
+- Stream → Tents
+
+**Geothermal/Volcanic Plains (East):**
+- Hot Springs ↔ Thermal Observatory ↔ Steam Separator Station
+- Hot Springs ↔ Geothermal Plant Exterior ↔ Steam Separator Station
+- Geothermal Plant Exterior → Ancient Steam Vents
+
+#### In-Game ASCII Map
+
+The game features an in-game map command that displays your current location:
+
+```
++---------------------------------------------------------------------------------------------+
+|                                   PROJECT AURORA MAP                                        |
++---------------------------------------------------------------------------------------------+
+|                                                                                             |
+|                                    [LIBRY ]                                                 |
+|                                       |                                                     |
+|                                    [REARCH]--[ CAFE ]                                       |
+|                                       |                                                     |
+|          [ HILL ]                     |         [CNTRL ]                                    |
+|             |                         |            |                                        |
+|          [TUNDRA]-----------------[H.HUB ]------[ DAM  ]                                    |
+|                                       |                                                     |
+|                                       |                                                     |
+|                                       |                                                     |
+| [ TENT ]         [FLD*  ]             |                              [VENTS ]               |
+|    |                |                 |                                 |                   |
+|    +------------[D.HUB ]--[SOLAR ]----+----[ HUB  ]----[H.SPRG]------[PLANT ]               |
+|                    |                          |           |             |                   |
+|       [WATER ]--[ JUNK ]--[SCRP 2]            |        [OBSRVY]------[SEPRAT]               |
+|                    |                          |                                             |
+|                 [SCRP 1]                      |                                             |
+|                                               |                                             |
+|                                            [BOREAL]         [ SHED ]                        |
+|                                               |                |                            |
+|                                            [CABIN ]---------[GARDEN]                        |
+|                                                                |                            |
+|                                                                |                            |
+|                                       [TENTS ]                 |        [COMPRS]            |
+|                                          |                     |           |                |
+|                                       [STREAM]--------------[TURBIN]----[TOWER ]--[OFFICE]  |
+|                                                                |                            |
+|                                                             [M.BOX ]                        |
+|                                                                                             |
++---------------------------------------------------------------------------------------------+
+```
+
+**Map Legend:**
+- Your current location is highlighted in RED when using the in-game `map` command
+- Use cardinal directions (north, south, east, west) to navigate
+- Some connections require specific items or completing quests
+- FLD* = Solar Panel Fields (region completion location)
 
 ---
 
