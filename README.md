@@ -47,23 +47,57 @@ The game uses a list-based inventory system to track items the player has collec
 
 ### 3.0 World Map
 
-#### Conceptual Map
-The game world is organized around a central hub with four regions accessible via cardinal directions:
+#### World Map Diagram
 
 ```mermaid
-graph TB
+graph TD
     Hub[Aurora Control Hub]
     
-    Hub -->|North| Hydro[Hydro Hub Region]
-    Hub -->|West| Solar[Solar Desert Region]
-    Hub -->|South| Windy[Windy Highlands Region]
-    Hub -->|East| Geo[Geothermal Region]
+    Hub -->|North| HydroHub[Hydro Hub]
+    Hub -->|West| SolarDesert[Solar Desert]
+    Hub -->|South| MountBoreal[Mount Boreal]
+    Hub -->|East| HotSprings[Hot Springs]
     
-    style Hub fill:#f9f,stroke:#333,stroke-width:4px
-    style Hydro fill:#9cf,stroke:#333,stroke-width:2px
-    style Solar fill:#fc9,stroke:#333,stroke-width:2px
-    style Windy fill:#9f9,stroke:#333,stroke-width:2px
-    style Geo fill:#f99,stroke:#333,stroke-width:2px
+    subgraph Solar Region
+        SolarDesert <--> DesertHub[Desert Hub]
+        DesertHub --> MaintTent[Maintenance Tent]
+        DesertHub --> SolarFields[Solar Panel Fields]
+        DesertHub --> Junkyard[Junkyard]
+        Junkyard --> WaterSupplies[Water Supplies]
+        Junkyard --> Scrap1[Scrapyard 1]
+        Junkyard --> Scrap2[Scrapyard 2]
+    end
+
+    subgraph Hydro Region
+        HydroHub --> DamPlant[The Dam Plant]
+        HydroHub --> ResearchCenter[Research Center]
+        HydroHub --> TundraForest[Tundra Forest]
+        ResearchCenter --> Library
+        ResearchCenter --> Cafeteria
+        TundraForest --> TopOfHill[Top of Hill]
+        DamPlant --> ControlRoom[Control Room]
+    end
+
+    subgraph Windy Region
+        MountBoreal --> Cabin
+        Cabin --> Garden
+        Garden --> Shed
+        Garden --> Turbines
+        Turbines --> Tower
+        Turbines --> MetalBox[Metal Box]
+        Turbines --> Stream
+        Stream --> Tents
+        Tower --> Office
+        Tower --> Computers
+    end
+
+    subgraph Geothermal Region
+        HotSprings --> Observatory[Thermal Observatory]
+        HotSprings --> PlantExterior[Geothermal Plant Exterior]
+        Observatory --> Separator[Steam Separator Station]
+        Separator --> PlantExterior
+        PlantExterior --> SteamVents[Ancient Steam Vents]
+    end
 ```
 
 #### Detailed Region Connections
