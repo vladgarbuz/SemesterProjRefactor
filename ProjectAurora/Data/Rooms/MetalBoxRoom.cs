@@ -13,8 +13,8 @@ namespace ProjectAurora.Data.Rooms
         {
             if (!state.BoxVisited)
             {
+                //User can only enter the code after visiting the box for the second time
                 state.MarkBoxVisited();
-                engine.Print("You notice the metal box has a keypad. You'll need a code to open it. Maybe you should explore the area more...");
             }
             return base.OnEnter(player, state, engine);
         }
