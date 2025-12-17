@@ -18,7 +18,7 @@ namespace ProjectAurora.Data.Rooms
                 if (correctCount >= quiz.PassThreshold)
                 {
                     state.CompleteQuiz();
-                    engine.Print("Correct! You enter the tent.");
+                    engine.Print("Correct!");
                     return true;
                 }
                 else
