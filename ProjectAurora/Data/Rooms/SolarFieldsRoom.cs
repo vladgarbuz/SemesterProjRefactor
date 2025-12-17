@@ -25,7 +25,7 @@ namespace ProjectAurora.Data.Rooms
             {
                 if (player.HasItem("Robotic Parts 1") && player.HasItem("Robotic Parts 2"))
                 {
-                    engine.Print("Robotic maintenance complete. Saved the Solar Desert! You can now return to the Desert Hub.");
+                    engine.Print("Robotic maintenance complete. Saved the Solar Desert! You can now return to the Main Hub.");
                     state.SetSolarFixed();
                     // Consume parts when used
                     if (player.HasItem("Robotic Parts 1")) player.RemoveItem("Robotic Parts 1");

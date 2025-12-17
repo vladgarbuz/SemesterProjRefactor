@@ -25,7 +25,7 @@ namespace ProjectAurora.Domain
             var solarDesert = new ProjectAurora.Data.Rooms.SolarDesertRoom("SolarDesert", "Solar Desert", "You are in the vast Solar Desert. The sun beats down on the sand. To the west lies the Desert Hub, and to the east is the Aurora Control Hub.");
             var desertHub = new Room("DesertHub", "Desert Hub", "You notice a map in front of the hub with the areas in the desert: Maintenance tent (west), Aurora Hub (east), Solar panel field (north), Junkyard (south). You decide to enter and there you find Dr. Liora Sunvale. She welcomes you and is ready to answer your questions. (talk)") { Occupant = new ProjectAurora.Domain.NPCs.DrLiora() };
             var maintTent = new ProjectAurora.Data.Rooms.MaintTentRoom("MaintTent", "Maintenance Tent", "You are inside the maintenance tent. Various tools are scattered about. In the corner sits a wooden box labeled 'Junkyard'.") { EntryRequirement = new TalkedToRequirement("Dr. Liora") };
-            var solarFields = new ProjectAurora.Data.Rooms.SolarFieldsRoom("SolarFields", "Solar Panel Fields", "You find yourself in the Solar Panel Fields and notice a lot of piles of sand. You try to dig into one and you find a solar panel. There are thousands of them. How will you clean up the piles: (1) Water Hose (unreliable) (2) Robotic maintenece") { EntryRequirement = new TalkedToRequirement("Dr. Liora") };
+            var solarFields = new ProjectAurora.Data.Rooms.SolarFieldsRoom("SolarFields", "Solar Panel Fields", "You notice a lot of piles of sand. You try to dig into one and you find a solar panel. There are thousands of them. You can either use the Water Hose (unreliable - 'use water hose') or the two Robotic parts (long term - 'use robotic part 1' or 'use robotic part 2')") { EntryRequirement = new TalkedToRequirement("Dr. Liora") };
             var junkyard = new Room("Junkyard", "Junkyard", "You use the key to enter the Junkyard and there you find 3 exits labeled: Water supplies (west), Scrapyard 1 (south), Scrapyard 2 (east)") { EntryRequirement = new KeyRequirement("Desert Key", consumeKey: true) };
             var waterSupplies = new Room("WaterSupplies", "Water Supplies", "You are in the water supplies storage. A huge pile of materials lies before you. Among the supplies, you can see a long water hose with a portable tank.");
             var scrap1 = new Room("Scrap1", "Scrapyard 1", "You've entered a scrapyard filled with piles of old parts and debris. Searching through the scraps, you spot some robotic parts that might be useful.");
@@ -154,7 +154,6 @@ namespace ProjectAurora.Domain
             computers.AddExit("south", tower);
 
             // Geothermal Connections
-            // Based on spec: SteamVents <-> HotSprings <-> Plant, HotSprings <-> Observatory <-> Separator <-> Plant
             hotSprings.AddExit("west", hub);  // Back to hub
             hotSprings.AddExit("south", observatory);
             hotSprings.AddExit("east", plantExterior);
@@ -196,13 +195,7 @@ namespace ProjectAurora.Domain
             // Note, Power Cables in Shed
             shed.AddItem(new Item("note", "A note that reads: 'One of the turbine parts was lost near the stream... I saw something furry running off with it. Check the tents.'"));
             shed.AddItem(new ProjectAurora.Data.Items.RepairItem("power cables", "A solid set of insulated power cables."));
-            // Code in Garden - available after visiting metal box
-            // Logic says "Only appears if box flag is true". We'll handle visibility in GameEngine or just add it and check flag on take.
-            // For simplicity, we add it but maybe make it un-takeable until flag? Or just add it when flag is set.
-            // Let's add it to the room but we might filter it out in description if not visible.
-            // Actually, let's NOT add it here, and add it dynamically in the engine when the flag is set.
-            
-            // Control Board (Raccoon/Stream) - Logic says Raccoon has it.
+            // Control Board (Raccoon/Stream)
             // Anemometer in Metal Box - Locked.
             // Flimsy Cables in Tower - Visible if Shed Key in inventory.
             

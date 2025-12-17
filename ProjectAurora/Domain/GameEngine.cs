@@ -269,19 +269,18 @@ Type 'map' to display the world map.
 |                                   PROJECT AURORA MAP                                        |
 +---------------------------------------------------------------------------------------------+
 |                                                                                             |
-|                                    [{LIBR}]                                                 |
-|                                       |                                                     |
-|                                    [{RSRC}]--[{CAFE}]                                       |
-|                                       |                                                     |
-|          [{HILL}]                     |         [{CTRL}]                                    |
-|             |                         |            |                                        |
-|          [{TUND}]-----------------[{HHUB}]------[{DAM_}]                                    |
-|                                       |                                                     |
-|                                       |                                                     |
-|                                       |                                                     |
-| [{TENT}]         [{FILD}]             |                              [{VENT}]               |
-|    |                |                 |                                 |                   |
-|    +------------[{DHUB}]--[{SOLR}]----+----[{HUB_}]----[{HSPR}]------[{PLNT}]               |
+|                                            [{LIBR}]                                         |
+|                                               |                                             |
+|                                            [{RSRC}]---[{CAFE}]                              |
+|                                               |                                             |
+|                           [{HILL}]            |          [{CTRL}]                           |
+|                              |                |             |                               |
+|                           [{TUND}]---------[{HHUB}]------[{DAM_}]                           |
+|                                               |                                             |
+|                                               |                                             |
+|                 [{FILD}]                      |                      [{VENT}]               |
+|                    |                          |                         |                   |
+|    [{TENT}]-----[{DHUB}]--[{SOLR}]---------[{HUB_}]----[{HSPR}]------[{PLNT}]               |
 |                    |                          |           |             |                   |
 |       [{WATR}]--[{JUNK}]--[{SCP2}]            |        [{OBSR}]------[{SEPR}]               |
 |                    |                          |                                             |
@@ -346,7 +345,7 @@ Type 'map' to display the world map.
                 { "SolarDesert", "SOLAR " },
                 { "DesertHub", "D.HUB " },
                 { "MaintTent", " TENT " },
-                { "SolarFields", "FLD*  " },
+                { "SolarFields", "S.FLD " },
                 { "Junkyard", " JUNK " },
                 { "WaterSupplies", "WATER " },
                 { "Scrap1", "SCRP 1" },
