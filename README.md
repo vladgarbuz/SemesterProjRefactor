@@ -11,7 +11,7 @@ Project Aurora is a text-based adventure game where the player acts as an engine
 *   **Format**: The game accepts one or two-word commands (e.g., "north", "take key").
 *   **Case Sensitivity**: All inputs are converted to lowercase/handled case-insensitively.
 *   **Invalid Commands**: If a command is not recognized, the game prints "I don't know that command."
-*   **Supported Commands**: `go`, `move`, `north`, `south`, `east`, `west`, `up`, `down`, `look`, `take`, `use`, `inventory` (or `inv`, `i`), `talk`, `help`, `map`.
+*   **Supported Commands**: `north`, `south`, `east`, `west`, `up`, `down`, `look`, `take`, `use`, `inventory` (or `inv`, `i`), `talk`, `help`, `map`.
 
 ### 2.2 Inventory System
 The game uses a list-based inventory system to track items the player has collected.
