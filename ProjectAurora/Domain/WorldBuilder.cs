@@ -51,7 +51,7 @@ namespace ProjectAurora.Domain
             var office = new Room("Office", "Office", "You've entered what seems to be an administration office. You can see blueprints and written entries scattered across the floor. You can hear rustling from behind a bookshelf, maybe you should see who it is (talk).") { Occupant = new ProjectAurora.Domain.NPCs.ProfKael() };
             var stream = new Room("Stream", "Stream", "You are standing next to a stream of water. To the north you can see an abandoned bonfire with a few tents nearby.");
             var tents = new ProjectAurora.Data.Rooms.TentsRoom("Tents", "Tents", "You can see something moving in one of the tents. Mybe you should see what it is. (talk)") { Occupant = new ProjectAurora.Domain.NPCs.Raccoon() };
-            var metalBox = new ProjectAurora.Data.Rooms.MetalBoxRoom("MetalBox", "Metal Box", "You're standing in front of the locked box. It seems to require a code to open. Try looking around the area to find it. Maybe you missed it.");
+            var metalBox = new ProjectAurora.Data.Rooms.MetalBoxRoom("MetalBox", "Metal Box", "You're standing in front of the locked box. It seems to require a code to open. Try looking around the area to find it. Maybe you missed it. ('use code' to enter code after finding it.)");
             var computers = new Room("Computers", "Computers", "You see old computers faintly flickering.") { Occupant = new ProjectAurora.Domain.NPCs.ComputersTerminal() };
 
             // Geothermal Region (Volcanic Plains)
