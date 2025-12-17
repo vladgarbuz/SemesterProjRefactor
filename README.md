@@ -11,18 +11,18 @@ Project Aurora is a text-based adventure game where the player acts as an engine
 *   **Format**: The game accepts one or two-word commands (e.g., "north", "take key").
 *   **Case Sensitivity**: All inputs are converted to lowercase/handled case-insensitively.
 *   **Invalid Commands**: If a command is not recognized, the game prints "I don't know that command."
+*   **Supported Commands**: `go`, `move`, `north`, `south`, `east`, `west`, `up`, `down`, `look`, `take`, `use`, `inventory` (or `inv`, `i`), `talk`, `help`, `map`.
 
 ### 2.2 Inventory System
 The game uses a list-based inventory system to track items the player has collected.
 *   **Taking Items**: `take [item name]` adds the item to the player's inventory and removes it from the room.
-*   **Checking Inventory**: `inventory` lists all items currently held by the player.
+*   **Checking Inventory**: `inventory`, `inv`, or `i` lists all items currently held by the player.
 *   **Using Items**: `use [item name]` triggers specific events if the player is in the correct room and has the item in their inventory.
 
 ### 2.3 Navigation
-*   **Movement**: `north`, `south`, `east`, `west`.
+*   **Movement**: `north`, `south`, `east`, `west`, `up`, `down`.
     * When you move using a navigation command, the game now automatically prints the room description.
 *   **Look**: `look` still prints the current room's long description (including exits and items) on demand.
-*   **Note**: The `back` command has been removed; move using cardinal or relative directions instead.
 
 ### 2.4 NPC State Logic
 *   **Cyclic Dialogue**: NPCs repeat their primary hint or instruction until a specific game state changes (e.g., an item is received or a task is completed).
@@ -134,19 +134,18 @@ The game features an in-game map command that displays your current location:
 |                                   PROJECT AURORA MAP                                        |
 +---------------------------------------------------------------------------------------------+
 |                                                                                             |
-|                                    [LIBRY ]                                                 |
-|                                       |                                                     |
-|                                    [REARCH]--[ CAFE ]                                       |
-|                                       |                                                     |
-|          [ HILL ]                     |         [CNTRL ]                                    |
-|             |                         |            |                                        |
-|          [TUNDRA]-----------------[H.HUB ]------[ DAM  ]                                    |
-|                                       |                                                     |
-|                                       |                                                     |
-|                                       |                                                     |
-| [ TENT ]         [FLD*  ]             |                              [VENTS ]               |
-|    |                |                 |                                 |                   |
-|    +------------[D.HUB ]--[SOLAR ]----+----[ HUB  ]----[H.SPRG]------[PLANT ]               |
+|                                            [LIBRY ]                                         |
+|                                               |                                             |
+|                                            [REARCH]---[ CAFE ]                              |
+|                                               |                                             |
+|                           [ HILL ]            |          [CNTRL ]                           |
+|                              |                |             |                               |
+|                           [TUNDRA]---------[H.HUB ]------[ DAM  ]                           |
+|                                               |                                             |
+|                                               |                                             |
+|                 [S.FLD ]                      |                      [VENTS ]               |
+|                    |                          |                         |                   |
+|    [ TENT ]-----[D.HUB ]--[SOLAR ]---------[ HUB  ]----[H.SPRG]------[PLANT ]               |
 |                    |                          |           |             |                   |
 |       [WATER ]--[ JUNK ]--[SCRP 2]            |        [OBSRVY]------[SEPRAT]               |
 |                    |                          |                                             |
@@ -230,7 +229,7 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
         *   Action: `talk` sets `talkedToLiora = true`, unlocking West and North exits.
 3.  **Maintenance Tent**
     *   `east` -> Desert Hub
-    *   **Event**: Upon entry, a quiz is triggered (if not already completed).
+    *   **Event**: Attempting to enter triggers a quiz (if not already completed).
         *   Question: "What happens if solar panels overheat?"
         *   Options: (1) More energy, (2) Less efficiency, (3) Catch fire.
         *   Input `2`: Success. Player enters the tent.
@@ -251,13 +250,12 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
 7.  **Scrapyard 2**
     *   `west` -> Junkyard
     *   **Item**: **Robotic Parts 2** - Visible in the room, must be taken manually.
-    *   **Item**: **Robotic Parts 2** - Visible in the room, must be taken manually.
 8.  **Solar Panel Fields**
-    *   **Event**: Upon entry, the player must choose a repair method.
-        *   Input `1` (Water Hose):
+    *   **Event**: Upon entry, the player is presented with a choice of repair methods.
+        *   **Method 1**: `use water hose`
             *   Condition: Requires **Water Hose** in inventory.
             *   Outcome: "Temporary fix". Game prints success message. Player returned to **Aurora Control Hub**.
-        *   Input `2` (Robotic Maintenance):
+        *   **Method 2**: `use robotic parts 1` (or `use robotic parts 2`)
             *   Condition: Requires **Robotic Parts 1** AND **Robotic Parts 2** in inventory.
             *   Outcome: "Saved the Solar Desert". Game prints success message. Player returned to **Aurora Control Hub**.
 
@@ -273,10 +271,10 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
     *   `west` -> Tundra Forest
 2.  **Research Center**
     *   `south` -> Hydro Hub
-    *   `north` -> Library
+    *   `north` (or `up`) -> Library
     *   `east` -> Cafeteria
 3.  **Library**
-    *   `south` -> Research Center
+    *   `south` (or `down`) -> Research Center
     *   **NPC**: Dr. Amara Riversong. Dialog provides hints about the acid (berries + pinecone).
 4.  **Cafeteria**
     *   `west` -> Research Center
@@ -304,9 +302,9 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
         *   `use lever`:
             *   Condition: Requires **lever** in inventory.
             *   Outcome: Sets `leverRepaired = true`. Prints success message.
-        *   `use berries` OR `use pinecone`:
+        *   `use berries` (or `use pinecone`):
             *   Condition: Requires **berries** AND **pinecone** in inventory.
-            *   Outcome: Triggers **QTE Minigame**.
+            *   Outcome: Triggers **QTE Minigame** (if lever not repaired) or fixes dam (if lever repaired).
 
 #### QTE Minigame (Hydro)
 *   **Trigger**: Using berries/pinecone in Control Room without repairing the lever.
@@ -355,26 +353,28 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
 6.  **Stream**
     *   `north` -> Tents
     *   `east` -> Turbines
-    *   **Item**: `control board`.
-        *   Action: `take control board` or `take board`.
-        *   Condition: Requires `fedRaccoon = true`. If false, raccoon steals it back.
 7.  **Tents**
+    *   `south` -> Stream
     *   **NPC**: Raccoon.
     *   **Interaction**: `use snack`.
         *   Condition: Requires **snack** in inventory.
-        *   Outcome: Sets `fedRaccoon = true`. Raccoon drops **control board** which can now be taken from the Stream.
+        *   Outcome: Sets `fedRaccoon = true`. Raccoon drops **control board** in the **Tents** room.
+    *   **Item**: `control board`.
+        *   Action: `take control board`.
+        *   Condition: Appears after feeding the raccoon.
 8.  **Metal Box**
     *   `north` -> Turbines
     *   **Event**: Entering sets `box = true` (allows finding code in Garden).
     *   **Item**: `anemometer`.
-        *   Condition: Requires **code** in inventory to open box.
-        *   Action: `take anemometer` -> Adds 'anemometer' to inventory.
+        *   Condition: Requires **code** in inventory.
+        *   Action: `use code`. Game prompts for the passcode (Answer: "Rigby").
+        *   Outcome: Box opens, revealing **anemometer**. Use `take anemometer` to collect it.
 9.  **Tower**
     *   `north` -> Computers
     *   `east` -> Office
     *   `south` -> Turbines
     *   **Item**: `flimsy cables`.
-        *   Condition: Only visible if **Shed Key** is in inventory.
+        *   Condition: Can be taken if **Shed Key** is in inventory (hidden item).
         *   Action: `take flimsy cables` -> Adds 'flimsy cables' to inventory.
 10. **Office**
     *   `west` -> Tower
@@ -512,7 +512,93 @@ The design emphasizes the following Object-Oriented principles:
     *   Delegates (callbacks) in `GameEngine` for QTE and quiz systems allow the UI layer to provide interaction without hardcoding dependencies.
     *   `Room` objects are composed with optional `Occupant` (NPC) and `EntryRequirement` objects, allowing flexible configuration.
 
-## 4. Architecture & Design
+### 4.3 Class Diagram
+
+```mermaid
+classDiagram
+    direction TB
+
+    %% --- Presentation Layer ---
+    class ConsoleUI {
+        +Run()
+    }
+
+    %% --- Domain Layer ---
+    class GameEngine {
+        +Move()
+        +Look()
+        +TakeItem()
+        +UseItem()
+    }
+
+    class CommandParser {
+        +ParseAndExecute()
+    }
+
+    class ICommand {
+        <<interface>>
+        +Execute()
+    }
+
+    class WorldBuilder {
+        +BuildWorld()
+    }
+
+    %% --- Data & State Layer ---
+    class Player {
+        +CurrentRoom
+        +Inventory
+    }
+
+    class GameState {
+        +Flags
+        +GetFlag()
+        +SetFlag()
+    }
+
+    class Room {
+        +Name
+        +Description
+        +Exits
+        +Items
+    }
+
+    class Item {
+        +Name
+        +Description
+    }
+
+    class ITalkable {
+        <<interface>>
+        +Talk()
+    }
+
+    class IEntryRequirement {
+        <<interface>>
+        +CanEnter()
+    }
+
+    %% --- Relationships ---
+    ConsoleUI --> GameEngine : Uses
+    ConsoleUI --> CommandParser : Uses
+    
+    CommandParser --> ICommand : Selects
+    ICommand ..> GameEngine : Manipulates
+
+    GameEngine ..> WorldBuilder : Builds World
+    GameEngine --> Player : Manages
+    GameEngine --> GameState : Tracks
+
+    Player --> Room : Located In
+    Player o-- Item : Holds
+
+    Room o-- Item : Contains
+    Room --> Room : Connected To
+    Room --> ITalkable : Has NPC
+    Room --> IEntryRequirement : Guarded By
+```
+
+## 5. Data & State Management
 
 ### 5.1 Domain State Models
 To support the architecture, state is distributed to relevant objects:
