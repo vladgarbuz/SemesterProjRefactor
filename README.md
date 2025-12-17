@@ -517,181 +517,86 @@ The design emphasizes the following Object-Oriented principles:
 
 ```mermaid
 classDiagram
-    %% Core Domain
+    direction TB
+
+    %% --- Presentation Layer ---
+    class ConsoleUI {
+        +Run()
+    }
+
+    %% --- Domain Layer ---
     class GameEngine {
-        +Player Player
-        +GameState State
-        +bool IsRunning
-        +Move(string direction)
+        +Move()
         +Look()
-        +TakeItem(string itemName)
-        +UseItem(string itemName)
-        +Func~IQte, bool~ RunHydroQTE
-        +Func~IMultiQuestionQuiz, int~ RunQuiz
+        +TakeItem()
+        +UseItem()
     }
 
     class CommandParser {
-        -Dictionary~string, ICommand~ _commands
-        +ParseAndExecute(string input, GameEngine engine)
+        +ParseAndExecute()
     }
 
+    class ICommand {
+        <<interface>>
+        +Execute()
+    }
+
+    class WorldBuilder {
+        +BuildWorld()
+    }
+
+    %% --- Data & State Layer ---
     class Player {
-        +Room CurrentRoom
-        +List~Item~ Inventory
-        +MoveTo(Room newRoom)
-        +AddItem(Item item)
-        +HasItem(string itemName)
+        +CurrentRoom
+        +Inventory
     }
 
     class GameState {
-        +Dictionary~string, bool~ Flags
-        +bool SolarFixed
-        +bool LeverRepaired
-        +SetFlag(string name, bool value)
-        +GetFlag(string name)
+        +Flags
+        +GetFlag()
+        +SetFlag()
     }
 
     class Room {
-        +string Name
-        +string Description
-        +ITalkable Occupant
-        +IEntryRequirement EntryRequirement
-        +OnEnter(Player, GameState, GameEngine)
-        +OnUseItem(Item, Player, GameState, GameEngine)
+        +Name
+        +Description
+        +Exits
+        +Items
     }
 
     class Item {
-        +string Name
-        +string Description
-        +bool IsPickupable
-    }
-
-    %% Interfaces
-    class ICommand {
-        <<interface>>
-        +Execute(string[] args, GameEngine engine)
+        +Name
+        +Description
     }
 
     class ITalkable {
         <<interface>>
-        +Talk(Player, GameState, Action~string~, GameEngine)
+        +Talk()
     }
 
     class IEntryRequirement {
         <<interface>>
-        +CanEnter(Player, GameState)
+        +CanEnter()
     }
 
-    class IWorldBuilder {
-        <<interface>>
-        +BuildWorld() Room
-    }
-
-    class IQuiz {
-        <<interface>>
-        +string Question
-        +string[] Options
-        +int CorrectAnswer
-    }
-
-    class IMultiQuestionQuiz {
-        <<interface>>
-        +List~IQuiz~ Questions
-        +int PassThreshold
-    }
-
-    class IQte {
-        <<interface>>
-        +char[] Keys
-        +int Rounds
-    }
-
-    %% Relationships
-    CommandParser --> ICommand
-    CommandParser ..> GameEngine
-
-    GameEngine --> Player
-    GameEngine --> GameState
-    GameEngine ..> IWorldBuilder
-    GameEngine ..> IQte
-    GameEngine ..> IMultiQuestionQuiz
-
-    Player --> Room
-    Player o-- Item
-
-    Room o-- Item
-    Room --> ITalkable
-    Room --> IEntryRequirement
-    Room --> Room : Exits
-
-    %% Implementations
-    ICommand <|.. MoveCommand
-    ICommand <|.. LookCommand
-    ICommand <|.. TakeCommand
-    ICommand <|.. UseCommand
-    ICommand <|.. MapCommand
-    ICommand <|.. InventoryCommand
+    %% --- Relationships ---
+    ConsoleUI --> GameEngine : Uses
+    ConsoleUI --> CommandParser : Uses
     
-    ITalkable <|.. DrLiora
-    ITalkable <|.. DrAmara
-    ITalkable <|.. ProfKael
-    ITalkable <|.. Raccoon
-    ITalkable <|.. ChiefRodriguez
-    
-    IEntryRequirement <|.. KeyRequirement
-    IEntryRequirement <|.. TalkedToRequirement
-    
-    Item <|-- KeyItem
-    Item <|-- RepairItem
-    Item <|-- ConsumableItem
-    
-    Room <|-- SolarFieldsRoom
-    Room <|-- ControlRoom
-    Room <|-- MaintTentRoom
-    Room <|-- MetalBoxRoom
+    CommandParser --> ICommand : Selects
+    ICommand ..> GameEngine : Manipulates
 
-    IQuiz <|.. SolarQuiz
-    IMultiQuestionQuiz <|.. GeothermalQuiz
-    IQte <|.. HydroQte
-```
+    GameEngine ..> WorldBuilder : Builds World
+    GameEngine --> Player : Manages
+    GameEngine --> GameState : Tracks
 
-### 4.4 Sequence Diagram: Command Execution
-The following diagram illustrates the flow of control when a user enters a command (e.g., "take key").
+    Player --> Room : Located In
+    Player o-- Item : Holds
 
-```mermaid
-sequenceDiagram
-    actor User
-    participant ConsoleUI
-    participant CommandParser
-    participant TakeCommand
-    participant GameEngine
-    participant Room
-    participant Player
-
-    User->>ConsoleUI: Types "take key"
-    ConsoleUI->>CommandParser: ParseAndExecute("take key", engine)
-    CommandParser->>CommandParser: Split input -> "take", ["key"]
-    CommandParser->>TakeCommand: Execute(["key"], engine)
-    TakeCommand->>GameEngine: TakeItem("key")
-    
-    %% Step 1: Check Room specific logic
-    GameEngine->>Room: OnTakeItem("key", player, state)
-    alt Room handles take
-        Room-->>GameEngine: true
-        GameEngine-->>ConsoleUI: Print(Custom Message)
-    else Default behavior
-        Room-->>GameEngine: false
-        
-        %% Step 2: Standard Item Pickup
-        GameEngine->>Room: Items.Find("key")
-        alt Item found & pickupable
-            GameEngine->>Player: AddItem(item)
-            GameEngine->>Room: RemoveItem(item)
-            GameEngine-->>ConsoleUI: Print("You took the key.")
-        else Item not found
-            GameEngine-->>ConsoleUI: Print("I don't see that here.")
-        end
-    end
+    Room o-- Item : Contains
+    Room --> Room : Connected To
+    Room --> ITalkable : Has NPC
+    Room --> IEntryRequirement : Guarded By
 ```
 
 ## 5. Data & State Management
@@ -741,67 +646,6 @@ Custom requirements can be created by implementing `IEntryRequirement`
 *   **Hydro Hub**: `Dam Key` (aka 'key'), `Lever`, `Berries`, `Pinecone`
 *   **Windy Highlands**: `Snack`, `Code`, `Hint Note`, `Power Cables`, `Control Board`, `Anemometer`, `Flimsy Cables`, `Shed Key`
 *   **Geothermal**: `Thermal Data`, `Permit`, `Geothermal Certificate`
-
-### 5.3 State Diagram: Quest Flow
-The game progresses through four independent region quests. All must be completed to win.
-
-```mermaid
-stateDiagram-v2
-    [*] --> AuroraHub
-    
-    state "Solar Desert Region" as Solar {
-        [*] --> TalkLiora
-        TalkLiora --> SolarQuiz : Enter Tent
-        SolarQuiz --> GetDesertKey : Pass Quiz
-        GetDesertKey --> EnterJunkyard : Unlock
-        EnterJunkyard --> GetRoboticParts
-        GetRoboticParts --> FixSolarPanels : Use Parts
-        FixSolarPanels --> SolarComplete
-    }
-
-    state "Hydro Hub Region" as Hydro {
-        [*] --> GetDamKey
-        GetDamKey --> EnterControlRoom
-        EnterControlRoom --> FixLever : Use Lever
-        FixLever --> MixAcid : Use Berries+Pinecone
-        MixAcid --> HydroQTE : Trigger Event
-        HydroQTE --> HydroComplete : Success
-    }
-
-    state "Windy Highlands Region" as Windy {
-        [*] --> GetSnack
-        GetSnack --> FeedRaccoon : Use Snack
-        FeedRaccoon --> GetControlBoard
-        GetControlBoard --> GetCode : Visit Box
-        GetCode --> OpenMetalBox : Use Code
-        OpenMetalBox --> GetAnemometer
-        GetAnemometer --> FixTurbines : Talk to Kael
-        FixTurbines --> WindyComplete
-    }
-
-    state "Geothermal Region" as Geothermal {
-        [*] --> TalkRodriguez
-        TalkRodriguez --> GetPermit
-        GetPermit --> CollectThermalData : Visit Vents
-        CollectThermalData --> SubmitData : Talk to Voss
-        SubmitData --> TakeGeoQuiz : Use Permit
-        TakeGeoQuiz --> GeothermalComplete : Pass (2/3)
-    }
-
-    AuroraHub --> Solar
-    AuroraHub --> Hydro
-    AuroraHub --> Windy
-    AuroraHub --> Geothermal
-
-    SolarComplete --> VictoryCheck
-    HydroComplete --> VictoryCheck
-    WindyComplete --> VictoryCheck
-    GeothermalComplete --> VictoryCheck
-
-    state VictoryCheck <<choice>>
-    VictoryCheck --> Victory : All 4 Complete
-    VictoryCheck --> AuroraHub : Else
-```
 
 ## 6. Script & Text Assets
 
