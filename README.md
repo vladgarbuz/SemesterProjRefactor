@@ -134,19 +134,18 @@ The game features an in-game map command that displays your current location:
 |                                   PROJECT AURORA MAP                                        |
 +---------------------------------------------------------------------------------------------+
 |                                                                                             |
-|                                    [LIBRY ]                                                 |
-|                                       |                                                     |
-|                                    [REARCH]--[ CAFE ]                                       |
-|                                       |                                                     |
-|          [ HILL ]                     |         [CNTRL ]                                    |
-|             |                         |            |                                        |
-|          [TUNDRA]-----------------[H.HUB ]------[ DAM  ]                                    |
-|                                       |                                                     |
-|                                       |                                                     |
-|                                       |                                                     |
-| [ TENT ]         [FLD*  ]             |                              [VENTS ]               |
-|    |                |                 |                                 |                   |
-|    +------------[D.HUB ]--[SOLAR ]----+----[ HUB  ]----[H.SPRG]------[PLANT ]               |
+|                                            [LIBRY ]                                         |
+|                                               |                                             |
+|                                            [REARCH]---[ CAFE ]                              |
+|                                               |                                             |
+|                           [ HILL ]            |          [CNTRL ]                           |
+|                              |                |             |                               |
+|                           [TUNDRA]---------[H.HUB ]------[ DAM  ]                           |
+|                                               |                                             |
+|                                               |                                             |
+|                 [S.FLD ]                      |                      [VENTS ]               |
+|                    |                          |                         |                   |
+|    [ TENT ]-----[D.HUB ]--[SOLAR ]---------[ HUB  ]----[H.SPRG]------[PLANT ]               |
 |                    |                          |           |             |                   |
 |       [WATER ]--[ JUNK ]--[SCRP 2]            |        [OBSRVY]------[SEPRAT]               |
 |                    |                          |                                             |
