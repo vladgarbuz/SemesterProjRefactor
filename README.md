@@ -190,20 +190,12 @@ Run unit tests:
 dotnet test
 ```
 
-## License
-
-Project Aurora is available under the MIT License. See the `LICENSE` file in the root of this repository.
-
----
-
 ## Map Characters & Unicode
 
 The in-game map uses Unicode box-drawing characters for the best visual appearance in modern terminals. If you notice the map rendering incorrectly, try the following:
 
 - Use a Unicode-capable font (e.g., Consolas, Fira Code, or DejaVu Sans Mono).
 - Make sure the terminal encoding is set to UTF-8.
-- If you prefer plain ASCII, update the `mapTemplate` in `ProjectAurora/Domain/GameEngine.cs` with an ASCII version.
-
 
 ### 3.1 Hub: Aurora Control Hub
 *   **Description**: The starting point.
