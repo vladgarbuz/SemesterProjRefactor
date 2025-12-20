@@ -795,3 +795,14 @@ To add new content using the established architecture:
 2.  **Build**: Run `dotnet build` in the project directory.
 3.  **Run**: Run `dotnet run --project ProjectAurora/ProjectAurora.csproj` to start the game.
 4.  **Test**: Run `dotnet test` to execute the unit test suite.
+
+## 12. AI Reference
+This project leverages Artificial Intelligence (GitHub Copilot (Gemmini 3.0 Flash, Sonnet 4.5), ChatGPT web, Claude web, Gemmini web) to enhance the development lifecycle. AI can assist in a variety of ways across any software project:
+
+*   **Ideation and Planning**: Brainstorming features and creating initial roadmaps or specifications.
+*   **Architecture and Design**: Suggesting appropriate design patterns  and best practices for scalability and maintainability.
+*   **Code Generation and Refactoring**: Writing boilerplate code, in-line autocompletion.
+*   **Documentation**: Updating technical documentation, README files, and diagrams (Mermaid UML) based on codebase analysis.
+*   **Testing and Quality Assurance**: Suggesting improvements for code coverage in unit test.
+*   **Debugging and Troubleshooting**: Analyzing error logs, identifying root causes of bugs, and suggesting potential fixes or optimizations.
+*   **Learning and Research**: Explaining complex concepts or providing code examples for unfamiliar technologies or libraries. (For example not all of us were familiar with C# syntax and OOP principles, but AI helped us transfer the knowledge we already had in other programming languages such as python).
