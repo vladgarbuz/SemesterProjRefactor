@@ -473,7 +473,7 @@ The project follows a strict separation of concerns using a 3-layer architecture
 2.  **Business Logic Layer (Domain)**
     *   **Responsibility**: Executes game rules, processes commands, and manages game flow.
     *   **Principles**:
-        *   This layer contains the core mechanics of the game (navigation, interaction, combat, etc.).
+        *   This layer contains the core mechanics of the game (navigation, interaction, etc.).
         *   It coordinates interactions between the player and the game world.
         *   It should be independent of the specific UI implementation.
 
