@@ -121,7 +121,7 @@ graph TD
     Hub -->|East| HotSprings[Hot Springs]
     
     subgraph Solar Region
-        SolarDesert <--> DesertHub[Desert Hub]
+        SolarDesert <-> DesertHub[Desert Hub]
         DesertHub --> MaintTent[Maintenance Tent]
         DesertHub --> SolarFields[Solar Panel Fields]
         DesertHub --> Junkyard[Junkyard]
@@ -524,22 +524,28 @@ Project Aurora is organized into a three-layer architecture to ensure separation
     *   **Purpose**: Handles the user interface. It displays information via the console (`ConsoleUI`) and captures raw input.
     *   **Collaboration**: Interacts exclusively with the Domain Layer to drive the game forward. It has no direct knowledge of the Data Layer's internal complexities.
 
-2.  **Business Logic Layer (Domain)**
-    *   **Responsibility**: Executes game rules, processes commands, and manages game flow.
-    *   **Principles**:
-        *   This layer contains the core mechanics of the game (navigation, interaction, combat, etc.).
-        *   It coordinates interactions between the player and the game world.
-        *   It should be independent of the specific UI implementation.
+2.  **Domain Layer (`ProjectAurora.Domain`)**
+    *   **Purpose**: Contains the core logic and rules of the game (the "how"). It manages the game loop (`GameEngine`), interprets user input (`CommandParser`), and builds the world (`WorldBuilder`).
+    *   **Collaboration**: Manipulates the Data Layer objects based on user actions and provides processed information to the Presentation Layer.
 
-3.  **Data Layer (State & Persistence)**
-    *   **Responsibility**: Stores the current state of the world, player inventory, and static game data.
-    *   **Principles**:
-        *   This layer encapsulates all mutable state (player location, inventory, world flags).
-        *   It provides a clean interface for the logic layer to query and modify state.
-        *   It separates the "save data" from the runtime logic.
+3.  **Data Layer (`ProjectAurora.Data`)**
+    *   **Purpose**: Defines the core entities and the state of the game (the "what"). It represents Rooms, the Player, Items, and the overall GameState.
+    *   **Collaboration**: Provides the data structures that the Domain Layer operates on. It is passive and does not contain complex business logic.
 
-### 4.2 OOP Principles
-The design emphasizes the following Object-Oriented principles:
+### 5.2 OOP Concepts and Principles
+The project heavily utilizes Object-Oriented Programming (OOP) to create a robust and flexible codebase.
+
+*   **Inheritance**:
+    *   **Usage**: The `Room` class serves as a base for specialized rooms like `ControlRoom` and `SolarFieldsRoom`. Similarly, `Item` is inherited by `KeyItem` and `RepairItem`.
+    *   **Why**: Allows defining common behavior in a base class while specializing behavior in subclasses.
+
+*   **Polymorphism**:
+    *   **Usage**: The `GameEngine` uses polymorphism when executing commands via the `ICommand` interface.
+    *   **Why**: Supports the **Open/Closed Principle**, allowing new commands to be added without modifying existing logic.
+
+*   **Abstraction and Interfaces**:
+    *   **Usage**: Interfaces like `IEntryRequirement`, `IQuiz`, and `IQte` define contracts for behavior.
+    *   **Why**: Hides implementation details, allowing the engine to interact with complex systems through simple interfaces.
 
 *   **Encapsulation**:
     *   **Usage**: Fields in classes like `Player` and `Room` are kept private or protected, with access provided through public properties.
@@ -554,7 +560,7 @@ The design emphasizes the following Object-Oriented principles:
 ```mermaid
 classDiagram
     class Program {
-        +Main(args: string[])
+        +Main(args)
     }
     class ConsoleUI {
         -GameEngine _engine
@@ -564,23 +570,22 @@ classDiagram
     class GameEngine {
         +Player Player
         +GameState State
-        +Move(direction: string)
+        +Move(direction)
         +Look()
         +CheckWinCondition()
     }
     class CommandParser {
-        -Dictionary~string, ICommand~ _commands
-        +ParseAndExecute(input: string, engine: GameEngine)
+        +ParseAndExecute(input, engine)
     }
     class Player {
         +Room CurrentRoom
         +List~Item~ Inventory
-        +AddItem(item: Item)
+        +AddItem(item)
     }
     class Room {
         +string Name
         +string Description
-        +Dictionary~string, Room~ Exits
+        +Dictionary~string,Room~ Exits
         +List~Item~ Items
         +NPC Occupant
         +IEntryRequirement EntryRequirement
@@ -591,7 +596,7 @@ classDiagram
     }
     class NPC {
         +string Name
-        +GetDialogue() string
+        +GetDialogue()
     }
     class GameState {
         +bool SolarRestored
@@ -599,17 +604,9 @@ classDiagram
         +bool WindRestored
         +bool GeothermalRestored
     }
-    interface IEntryRequirement {
-        +CanEnter(player: Player, state: GameState) bool
-    }
-    interface IWorldBuilder {
-        +BuildWorld() Room
-    }
-    class WorldBuilder {
-        +BuildWorld() Room
-    }
-    interface ICommand {
-        +Execute(args: string[], engine: GameEngine)
+    class IEntryRequirement {
+        <<interface>>
+        +CanEnter(player, state)
     }
 
     Program --> ConsoleUI : creates
@@ -617,15 +614,13 @@ classDiagram
     ConsoleUI --> CommandParser : uses
     GameEngine --> Player : manages
     GameEngine --> GameState : updates
-    GameEngine --> IWorldBuilder : uses
-    WorldBuilder ..|> IWorldBuilder : implements
+    GameEngine --> WorldBuilder : uses to initialize
     Player --> Room : occupies
     Player --> Item : carries
     Room --> Item : contains
     Room --> NPC : contains
     Room --> IEntryRequirement : has
-    CommandParser --> ICommand : uses
-    ICommand --> GameEngine : executes on
+    CommandParser --> GameEngine : executes on
 ```
 
 ## 6. Data & State Management
