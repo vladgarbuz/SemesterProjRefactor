@@ -5,30 +5,85 @@ An open-source, console-based text-adventure where you play an engineer trying t
 ## 1. Overview
 Project Aurora is a text-based adventure game where the player acts as an engineer in the year 2075. The goal is to restore power to four regions: Solar Desert, Hydro Hub, Windy Highlands, and Volcanic Plains. The game runs in a console environment and uses a natural language parser for user input.
 
-## 2. Global Mechanics
+## 2. Requirements Analysis
 
-### 2.1 Input Parser
+### 2.1 Verb–Noun Analysis
+Applying the Verb–Noun technique to the program specification:
+
+| Nouns (Classes) | Verbs (Responsibilities) |
+| :--- | :--- |
+| `GameEngine` | Manage game loop, track state, handle movement |
+| `Player` | Store inventory, track current location |
+| `Room` | Store exits, items, and NPCs; handle entry events |
+| `Item` | Define properties of collectable objects |
+| `NPC` | Provide dialogue and trigger events |
+| `CommandParser` | Parse user input into commands |
+| `WorldBuilder` | Construct the game world and connections |
+| `GameState` | Track global progress flags |
+| `Quiz` / `QTE` | Execute mini-game logic |
+
+### 2.2 CRC Cards
+
+#### Class: GameEngine
+| **Responsibilities** | **Collaborators** |
+| :--- | :--- |
+| Coordinates game flow and state transitions | `Player`, `Room`, `GameState`, `WorldBuilder` |
+| Processes movement and interaction logic | `CommandParser`, `ICommand` |
+| Checks for win/loss conditions | `GameState` |
+| Provides output messages to the UI | `ConsoleUI` |
+
+#### Class: Player
+| **Responsibilities** | **Collaborators** |
+| :--- | :--- |
+| Maintains the player's current location | `Room` |
+| Manages a list of collected items | `Item` |
+| Handles adding/removing items from inventory | `Item` |
+
+#### Class: Room
+| **Responsibilities** | **Collaborators** |
+| :--- | :--- |
+| Stores descriptions and available exits | `Room` |
+| Holds items and NPCs present in the location | `Item`, `NPC` |
+| Enforces entry requirements | `IEntryRequirement` |
+| Triggers specific events upon entry | `GameEngine` |
+
+#### Class: CommandParser
+| **Responsibilities** | **Collaborators** |
+| :--- | :--- |
+| Tokenizes and interprets user string input | `GameEngine` |
+| Maps input to specific command actions | `ICommand` |
+
+#### Class: WorldBuilder
+| **Responsibilities** | **Collaborators** |
+| :--- | :--- |
+| Instantiates all rooms, items, and NPCs | `Room`, `Item`, `NPC` |
+| Defines the spatial relationships (exits) between rooms | `Room` |
+| Sets up initial game state | `GameState` |
+
+## 3. Global Mechanics
+
+### 3.1 Input Parser
 *   **Format**: The game accepts one or two-word commands (e.g., "north", "take key").
 *   **Case Sensitivity**: All inputs are converted to lowercase/handled case-insensitively.
 *   **Invalid Commands**: If a command is not recognized, the game prints "I don't know that command."
 *   **Supported Commands**: `north`, `south`, `east`, `west`, `up`, `down`, `look`, `take`, `use`, `inventory` (or `inv`, `i`), `talk`, `help`, `map`.
 
-### 2.2 Inventory System
+### 3.2 Inventory System
 The game uses a list-based inventory system to track items the player has collected.
 *   **Taking Items**: `take [item name]` adds the item to the player's inventory and removes it from the room.
 *   **Checking Inventory**: `inventory`, `inv`, or `i` lists all items currently held by the player.
 *   **Using Items**: `use [item name]` triggers specific events if the player is in the correct room and has the item in their inventory.
 
-### 2.3 Navigation
+### 3.3 Navigation
 *   **Movement**: `north`, `south`, `east`, `west`, `up`, `down`.
     * When you move using a navigation command, the game now automatically prints the room description.
 *   **Look**: `look` still prints the current room's long description (including exits and items) on demand.
 
-### 2.4 NPC State Logic
+### 3.4 NPC State Logic
 *   **Cyclic Dialogue**: NPCs repeat their primary hint or instruction until a specific game state changes (e.g., an item is received or a task is completed).
 *   **State-Dependent Dialogue**: After a quest is completed (e.g., `talkedToLiora = true`), the NPC's dialogue changes to reflect progress (e.g., "Good luck with the panels!").
 
-### 2.5 Game Loop & UI Specifics
+### 3.5 Game Loop & UI Specifics
 *   **Screen Clearing**: The console clears (`Console.Clear()`) upon moving to a new room to keep the interface clean.
 *   **Color Coding**:
     *   **Room Names**: Magenta
@@ -37,7 +92,7 @@ The game uses a list-based inventory system to track items the player has collec
     *   **Exits**: Yellow
     *   **Error Messages**: Red
 
-### 2.6 Win/Loss State Definitions
+### 3.6 Win/Loss State Definitions
 *   **Victory**: The game ends when all four regions are restored and the player returns to the Aurora Control Hub.
     *   **Conditions**:
         *   **Location**: Player must be in the **Hub**.
@@ -50,9 +105,9 @@ The game uses a list-based inventory system to track items the player has collec
     *   **QTE Failure**: Failing the Hydro QTE results in a 10-second timeout before retrying. There is no permanent "Game Over" screen.
     *   **Quiz Failure**: Answering incorrectly in the Solar Desert quiz moves the player back to the previous room, requiring them to try again. The Geothermal quiz requires 2 out of 3 correct answers to pass; incorrect answers can be retried.
 
-## 3. Region Specifications
+## 4. Region Specifications
 
-### 3.0 World Map
+### 4.0 World Map
 
 #### World Map Diagram
 
@@ -204,7 +259,7 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
 - Use a Unicode-capable font (e.g., Consolas, Fira Code, or DejaVu Sans Mono).
 - Make sure the terminal encoding is set to UTF-8.
 
-### 3.1 Hub: Aurora Control Hub
+### 4.1 Hub: Aurora Control Hub
 *   **Description**: The starting point.
 *   **Exits**:
     *   `north` -> Hydro Hub
@@ -214,7 +269,7 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
 
 ---
 
-### 3.2 Region 1: Solar Desert (West)
+### 4.2 Region 1: Solar Desert (West)
 
 #### Room Map
 1.  **Solar Desert** (Entry)
@@ -260,7 +315,7 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
 
 ---
 
-### 3.3 Region 2: Hydro Hub (North)
+### 4.3 Region 2: Hydro Hub (North)
 
 #### Room Map
 1.  **Hydro Hub** (Entry)
@@ -319,7 +374,7 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
 
 ---
 
-### 3.4 Region 3: Windy Highlands (South)
+### 4.4 Region 3: Windy Highlands (South)
 
 #### Room Map
 1.  **Mount Boreal** (Entry)
@@ -392,7 +447,7 @@ The in-game map uses Unicode box-drawing characters for the best visual appearan
 
 ---
 
-### 3.5 Region 4: Volcanic Plains / Geothermal (East)
+### 4.5 Region 4: Volcanic Plains / Geothermal (East)
 
 The fourth region features geothermal energy, accessed from Aurora Control Hub by going east. This region teaches players about renewable geothermal power generation.
 
@@ -460,146 +515,128 @@ The fourth region features geothermal energy, accessed from Aurora Control Hub b
 
 ---
 
-### 4.1 Three-Layer Architecture
-The project follows a strict separation of concerns using a 3-layer architecture:
+## 5. Implementation
 
-1.  **Presentation Layer (UI)**
-    *   **Responsibility**: Handles all user input and console output.
-    *   **Principles**:
-        *   The UI layer should only be responsible for displaying information to the user and capturing raw input.
-        *   It should not contain any game logic or state management.
-        *   Input parsing should convert raw text into structured data before passing it to the logic layer.
+### 5.1 Three-Layer Architecture
+Project Aurora is organized into a three-layer architecture to ensure separation of concerns, maintainability, and scalability.
 
-2.  **Business Logic Layer (Domain)**
-    *   **Responsibility**: Executes game rules, processes commands, and manages game flow.
-    *   **Principles**:
-        *   This layer contains the core mechanics of the game (navigation, interaction, combat, etc.).
-        *   It coordinates interactions between the player and the game world.
-        *   It should be independent of the specific UI implementation.
+1.  **Presentation Layer (`ProjectAurora.Presentation`)**
+    *   **Purpose**: Handles the user interface. It displays information via the console (`ConsoleUI`) and captures raw input.
+    *   **Collaboration**: Interacts exclusively with the Domain Layer to drive the game forward. It has no direct knowledge of the Data Layer's internal complexities.
 
-3.  **Data Layer (State & Persistence)**
-    *   **Responsibility**: Stores the current state of the world, player inventory, and static game data.
-    *   **Principles**:
-        *   This layer encapsulates all mutable state (player location, inventory, world flags).
-        *   It provides a clean interface for the logic layer to query and modify state.
-        *   It separates the "save data" from the runtime logic.
+2.  **Domain Layer (`ProjectAurora.Domain`)**
+    *   **Purpose**: Contains the core logic and rules of the game (the "how"). It manages the game loop (`GameEngine`), interprets user input (`CommandParser`), and builds the world (`WorldBuilder`).
+    *   **Collaboration**: Manipulates the Data Layer objects based on user actions and provides processed information to the Presentation Layer.
 
-### 4.2 OOP Principles
-The design emphasizes the following Object-Oriented principles:
+3.  **Data Layer (`ProjectAurora.Data`)**
+    *   **Purpose**: Defines the core entities and the state of the game (the "what"). It represents Rooms, the Player, Items, and the overall GameState.
+    *   **Collaboration**: Provides the data structures that the Domain Layer operates on. It is passive and does not contain complex business logic.
+
+### 5.2 OOP Concepts and Principles
+The project heavily utilizes Object-Oriented Programming (OOP) to create a robust and flexible codebase.
+
+*   **Inheritance**:
+    *   **Usage**: The `Room` class serves as a base for specialized rooms like `ControlRoom` and `SolarFieldsRoom`. Similarly, `Item` is inherited by `KeyItem` and `RepairItem`.
+    *   **Why**: Allows defining common behavior in a base class while specializing behavior in subclasses.
+
+*   **Polymorphism**:
+    *   **Usage**: The `GameEngine` uses polymorphism when executing commands via the `ICommand` interface.
+    *   **Why**: Supports the **Open/Closed Principle**, allowing new commands to be added without modifying existing logic.
+
+*   **Abstraction and Interfaces**:
+    *   **Usage**: Interfaces like `IEntryRequirement`, `IQuiz`, and `IQte` define contracts for behavior.
+    *   **Why**: Hides implementation details, allowing the engine to interact with complex systems through simple interfaces.
 
 *   **Encapsulation**:
-    *   Game state is not global. State is encapsulated within `GameState` for global flags and within relevant room/NPC objects for local state.
-    *   Objects manage their own internal state and expose methods to modify it, rather than allowing direct external modification.
-    *   `Room` and `NPC` objects encapsulate behavior specific to that location or character.
+    *   **Usage**: Fields in classes like `Player` and `Room` are kept private or protected, with access provided through public properties.
+    *   **Why**: Protects internal state and ensures data is only changed through controlled logic.
 
-*   **Polymorphism (Command Pattern & Interface-Based Design)**:
-    *   Commands are executed through the `CommandParser`, which delegates to the `GameEngine` rather than containing massive switch statements.
-    *   Rooms inherit from the `Room` base class and override `OnEntryEvent()`, `OnUseItem()`, and `OnTakeItem()` methods to provide region-specific logic.
-    *   NPCs implement the `ITalkable` interface to standardize dialogue interactions.
-    *   Items can be of different types (e.g., `KeyItem`, `RepairItem`, `ConsumableItem`) using inheritance and polymorphism.
-    *   Quizzes implement `IMultiQuestionQuiz` and `IQte` interfaces to allow different game mechanics (QTE, quizzes) to be swapped or extended.
+*   **SOLID Principles**:
+    *   **SRP**: Each class (e.g., `CommandParser`, `ConsoleUI`) has one clear responsibility.
+    *   **DIP**: High-level modules depend on abstractions (`IWorldBuilder`, `ICommand`) rather than concrete implementations.
 
-*   **Single Responsibility Principle (SRP)**:
-    *   `CommandParser` only parses text input into command tokens; it doesn't execute logic.
-    *   `GameEngine` orchestrates logic but delegates to rooms and NPCs for context-specific behavior.
-    *   `Room` objects hold data about location state and handle entry/interaction logic for that location.
-    *   `ConsoleUI` only handles user input and output display; it does not contain game logic.
-    *   `Player` manages inventory and position; it doesn't make decisions about world rules.
-
-*   **Dependency Injection & Composition**:
-    *   The `GameEngine` accepts an `IWorldBuilder` interface, allowing different world implementations without coupling to a specific builder.
-    *   Delegates (callbacks) in `GameEngine` for QTE and quiz systems allow the UI layer to provide interaction without hardcoding dependencies.
-    *   `Room` objects are composed with optional `Occupant` (NPC) and `EntryRequirement` objects, allowing flexible configuration.
-
-### 4.3 Class Diagram
+### 5.3 Class Diagram
 
 ```mermaid
 classDiagram
-    direction TB
-
-    %% --- Presentation Layer ---
+    class Program {
+        +Main(args: string[])
+    }
     class ConsoleUI {
+        -GameEngine _engine
+        -CommandParser _parser
         +Run()
     }
-
-    %% --- Domain Layer ---
     class GameEngine {
-        +Move()
+        +Player Player
+        +GameState State
+        +Move(direction: string)
         +Look()
-        +TakeItem()
-        +UseItem()
+        +CheckWinCondition()
     }
-
     class CommandParser {
-        +ParseAndExecute()
+        -Dictionary~string, ICommand~ _commands
+        +ParseAndExecute(input: string, engine: GameEngine)
     }
-
-    class ICommand {
-        <<interface>>
-        +Execute()
-    }
-
-    class WorldBuilder {
-        +BuildWorld()
-    }
-
-    %% --- Data & State Layer ---
     class Player {
-        +CurrentRoom
-        +Inventory
+        +Room CurrentRoom
+        +List~Item~ Inventory
+        +AddItem(item: Item)
     }
-
-    class GameState {
-        +Flags
-        +GetFlag()
-        +SetFlag()
-    }
-
     class Room {
-        +Name
-        +Description
-        +Exits
-        +Items
+        +string Name
+        +string Description
+        +Dictionary~string, Room~ Exits
+        +List~Item~ Items
+        +NPC Occupant
+        +IEntryRequirement EntryRequirement
     }
-
     class Item {
-        +Name
-        +Description
+        +string Name
+        +string Description
+    }
+    class NPC {
+        +string Name
+        +GetDialogue() string
+    }
+    class GameState {
+        +bool SolarRestored
+        +bool HydroRestored
+        +bool WindRestored
+        +bool GeothermalRestored
+    }
+    interface IEntryRequirement {
+        +CanEnter(player: Player, state: GameState) bool
+    }
+    interface IWorldBuilder {
+        +BuildWorld() Room
+    }
+    class WorldBuilder {
+        +BuildWorld() Room
+    }
+    interface ICommand {
+        +Execute(args: string[], engine: GameEngine)
     }
 
-    class ITalkable {
-        <<interface>>
-        +Talk()
-    }
-
-    class IEntryRequirement {
-        <<interface>>
-        +CanEnter()
-    }
-
-    %% --- Relationships ---
-    ConsoleUI --> GameEngine : Uses
-    ConsoleUI --> CommandParser : Uses
-    
-    CommandParser --> ICommand : Selects
-    ICommand ..> GameEngine : Manipulates
-
-    GameEngine ..> WorldBuilder : Builds World
-    GameEngine --> Player : Manages
-    GameEngine --> GameState : Tracks
-
-    Player --> Room : Located In
-    Player o-- Item : Holds
-
-    Room o-- Item : Contains
-    Room --> Room : Connected To
-    Room --> ITalkable : Has NPC
-    Room --> IEntryRequirement : Guarded By
+    Program --> ConsoleUI : creates
+    ConsoleUI --> GameEngine : uses
+    ConsoleUI --> CommandParser : uses
+    GameEngine --> Player : manages
+    GameEngine --> GameState : updates
+    GameEngine --> IWorldBuilder : uses
+    WorldBuilder ..|> IWorldBuilder : implements
+    Player --> Room : occupies
+    Player --> Item : carries
+    Room --> Item : contains
+    Room --> NPC : contains
+    Room --> IEntryRequirement : has
+    CommandParser --> ICommand : uses
+    ICommand --> GameEngine : executes on
 ```
 
-## 5. Data & State Management
+## 6. Data & State Management
 
-### 5.1 Domain State Models
+### 6.1 Domain State Models
 To support the architecture, state is distributed to relevant objects:
 
 #### GameState
@@ -639,15 +676,15 @@ Rooms can have optional `IEntryRequirement` instances that gate access:
 *   **TalkedToRequirement**: Check if player has spoken to a specific NPC
 Custom requirements can be created by implementing `IEntryRequirement`
 
-### 5.2 Items (Inventory Data)
+### 6.2 Items (Inventory Data)
 *   **Solar Desert**: `Desert Key`, `Water Hose`, `Robotic Parts 1`, `Robotic Parts 2`
 *   **Hydro Hub**: `Dam Key` (aka 'key'), `Lever`, `Berries`, `Pinecone`
 *   **Windy Highlands**: `Snack`, `Code`, `Hint Note`, `Power Cables`, `Control Board`, `Anemometer`, `Flimsy Cables`, `Shed Key`
 *   **Geothermal**: `Thermal Data`, `Permit`, `Geothermal Certificate`
 
-## 6. Script & Text Assets
+## 7. Script & Text Assets
 
-### 6.1 Room Descriptions
+### 7.1 Room Descriptions
 *   **Aurora Control Hub**: "You are in the Aurora Control Hub, the heart of the last renewable energy initiative. The air hums with faint backup power. Screens flicker, showing maps of four darkened regions. A workbench lies in the corner with scattered tools."
 *   **Solar Desert**: "After walking for hours you find yourself in a desolate land. The desert stretches before you. Towers of sand cover the solar field. Heat shimmers across the horizon. You find a small hub that looks like it could have life(west)"
 *   **Desert Hub**: "You notice a map in front of the hub with the areas in the desert: Maintenance tent (west), Aurora Hub (east), Solar panel field (north), Junkyard (south). You decide to enter and there you find Dr. Liora Sunvale. She welcomes you and is ready to answer your questions. (talk)"
@@ -681,7 +718,7 @@ Custom requirements can be created by implementing `IEntryRequirement`
 *   **Geothermal Plant Exterior**: "A large geothermal plant exterior with cooling towers and turbine buildings. The heart of the region's renewable energy."
 *   **Ancient Steam Vents**: "Steam geysers erupt over mineral-rich fractures. The raw geothermal power of the Earth is visible here."
 
-### 6.2 NPC Dialogues
+### 7.2 NPC Dialogues
 *   **Dr. Liora Sunvale (Desert Hub)**: "Welcome young scientist! Our mission is to save the 'Solar panel field' and find all buried solar panels! We have thought of 2 methods of doing it and you're more than welcome to chose which one you prefer. 1 of them is a temporary fix, so choose wisely! Visit the maintenance tent to get more information.(west)"
 *   **Dr. Amara Riversong (Library)**: "Oh, hello. Looking for information on the Dam? It's truly bad luck, due to climate change the weather became even more extreme up here North as a result the dam's pipes have frozen and the lever that could reboot the pipes has became rusty and stuck shut. To add to the troubles, apparently the dam's key was misplaced by a previous Aurora member, now we can't enter the Control Room even if we had the acid to derust the lever but I have some good news aswell, I have worked out an acid that could derusting the lever and restart the energy production of the dam, it requires berry juice and pinecone dust. You should find both around the Tundra forest. This is all the information you should need to save the Dam"
 *   **Prof. Kael Stormwright (Office)**: "'Huh? Who are you?' 'Whatever, we don't have time for that, I'm sure you've seen the turbines nearby; we need to fix them.' 'I've been trying to do it on my own, but I am missing some key components.' 'I need you to bring me some power cables, a control board and an anemometer. You can find these items scattered around the map.'"
@@ -696,7 +733,7 @@ Custom requirements can be created by implementing `IEntryRequirement`
 *   **James (Steam Separator Station)**: "James: 'This separator is the heart of the operation. We extract steam, generate power, then reinject water to maintain the reservoir. The system runs 24/7, unlike solar or wind.'"
 *   **Chief Engineer Rodriguez (Geothermal Plant Exterior)**: "'Welcome! This plant generates 50 megawatts constantly. Geothermal never stops, unlike solar or wind. I'm placing a permit here for you - take it and use it at the observatory for the certification quiz.'"
 
-### 6.3 Item Descriptions
+### 7.3 Item Descriptions
 *   **berries**: "A cluster of edible-looking berries. Maybe they could be useful."
 *   **pinecone**: "A large, pinecone."
 *   **key (Dam Key)**: "A small metal tool with the Aurora symbol on it. It doesn't quite fit the shape of the rest of the spoons and forks, maybe you should investigate? (take key)"
@@ -712,29 +749,41 @@ Custom requirements can be created by implementing `IEntryRequirement`
 *   **permit**: "A permit from Chief Rodriguez allowing you to take the geothermal certification quiz."
 *   **geothermal_certificate**: "A certificate proving your knowledge of geothermal energy."
 
-### 6.4 Generic Messages
+### 7.4 Generic Messages
 *   **Invalid Move**: "You can't go that way."
 *   **Item Not Found**: "I don't see that here."
 *   **Inventory Empty**: "You are not carrying anything."
 *   **Unknown Command**: "I don't know that command."
 
-## 7. Testing Strategy / Quality Assurance
-Since the game relies heavily on state changes, the following key scenarios should be tested:
+## 8. Testing
 
-*   **Test Case A (Access Control)**: Attempt to enter the Solar Panel Fields without talking to Dr. Liora.
-    *   *Expected Result*: Access denied message.
-*   **Test Case B (Inventory Validation)**: Attempt to use the Water Hose on the Solar Panel without having it in inventory.
-    *   *Expected Result*: "You don't have that item" or similar error.
-*   **Test Case C (State Persistence - Hydro)**: Complete the Hydro QTE, leave the room, and return.
-    *   *Expected Result*: The QTE should not trigger again; the dam should remain fixed.
-*   **Test Case D (Quiz Retry - Solar)**: Fail the Solar Desert quiz and verify access to the Maintenance Tent is denied until the correct answer is given.
-    *   *Expected Result*: Access denied until player successfully answers the quiz.
-*   **Test Case E (Geothermal Quiz)**: Complete the geothermal quiz workflow: talk to Chief Rodriguez → take permit → collect thermal data → submit to Dr. Voss → use permit to take quiz.
-    *   *Expected Result*: On passing (2+ out of 3 correct), player earns certification and region is marked as complete.
-*   **Test Case F (Win Condition)**: Complete all 4 regions (Solar, Hydro, Windy, Geothermal) and return to the Hub.
-    *   *Expected Result*: Game displays victory message and exits. Message should indicate all four regions are restored.
+### 8.1 Unit Testing
+Project Aurora includes a comprehensive suite of unit tests using the **xUnit** framework. These tests ensure that individual components function correctly in isolation.
 
-## 8. Configuration & Constants
+- **CommandParserTests**: Verifies that user strings are correctly mapped to command actions and that invalid inputs are handled gracefully.
+- **GameEngineTests**: Tests core mechanics such as movement, inventory management, and state updates.
+- **RoomAndNpcTests**: Ensures that room-specific logic (like entry requirements) and NPC interactions work as expected.
+- **GameCompletionTests**: Simulates a full playthrough to verify that the win condition is reachable and all regional flags are set correctly.
+
+### 8.2 Manual Testing
+Manual testing was performed to ensure a smooth user experience and to catch issues that unit tests might miss, such as:
+- **UI/UX**: Verifying that text colors (Red for errors, etc.) appear correctly and that the console output is readable.
+- **Game Flow**: Playing through the game to ensure the narrative makes sense and that the difficulty of quizzes/QTEs is appropriate.
+- **Edge Cases**: Testing unusual command combinations or sequences that might not be covered by automated scripts.
+
+### 8.3 Integration Testing
+The `GameCompletionTests` serve as integration tests, as they verify the collaboration between the `GameEngine`, `CommandParser`, `WorldBuilder`, and all Data Layer entities to ensure the system works as a whole.
+
+### 8.4 Key Test Scenarios
+Since the game relies heavily on state changes, the following key scenarios are prioritized:
+
+*   **Access Control**: Attempt to enter the Solar Panel Fields without talking to Dr. Liora.
+*   **Inventory Validation**: Attempt to use the Water Hose on the Solar Panel without having it in inventory.
+*   **State Persistence**: Complete the Hydro QTE, leave the room, and return to ensure it doesn't re-trigger.
+*   **Quiz Retry**: Fail a quiz and verify access is denied until the correct answer is given.
+*   **Win Condition**: Complete all 4 regions and return to the Hub to trigger the victory message.
+
+## 9. Configuration & Constants
 The game uses several "magic numbers" that should be defined as constants for easy balancing:
 
 *   **QTE_TIMEOUT_MS**: `3000` (Time allowed to press a key in the Hydro minigame).
@@ -743,7 +792,7 @@ The game uses several "magic numbers" that should be defined as constants for ea
 *   **SOLAR_QUIZ_CORRECT_OPTION**: `2` (The correct index for the Solar Desert quiz - option about solar panel efficiency).
 *   **GEOTHERMAL_PASS_THRESHOLD**: `2` (Number of correct answers needed to pass geothermal quiz out of 3 total questions).
 
-## 9. Extension Guidelines
+## 10. Extension Guidelines
 To add new content using the established architecture:
 
 1.  **Add a Region**: Create a new `Room` node in the graph and ensure it connects to the Hub via a cardinal direction.
@@ -752,7 +801,7 @@ To add new content using the established architecture:
     *   Define a new state property in `GameState` (e.g., `IsBridgeFixed`).
     *   Add a condition in the relevant `Room` or `NPC` interaction logic to check/set this property.
 
-## 10. Development Setup
+## 11. Development Setup
 1.  **Prerequisites**: .NET 9.0 SDK (or later).
 2.  **Build**: Run `dotnet build` in the project directory.
 3.  **Run**: Run `dotnet run --project ProjectAurora/ProjectAurora.csproj` to start the game.
