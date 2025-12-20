@@ -121,7 +121,7 @@ graph TD
     Hub -->|East| HotSprings[Hot Springs]
     
     subgraph Solar Region
-        SolarDesert <-> DesertHub[Desert Hub]
+        SolarDesert --- DesertHub[Desert Hub]
         DesertHub --> MaintTent[Maintenance Tent]
         DesertHub --> SolarFields[Solar Panel Fields]
         DesertHub --> Junkyard[Junkyard]
