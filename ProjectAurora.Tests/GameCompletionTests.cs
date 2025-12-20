@@ -26,14 +26,6 @@ namespace ProjectAurora.Tests
             engine.Move("west"); // Solar Desert
             engine.Move("west"); // Desert Hub
             engine.Talk(); // Talk to Dr. Liora
-            
-            // The quiz is handled by the UI in the real game, but here we need to simulate the state change
-            // if the Move command doesn't trigger it. 
-            // Actually, let's see how the quiz is triggered.
-            // In WorldBuilder: desertHub.AddExit("west", maintTent);
-            // In GameEngine.Move: if (HandleEntryEvents(nextRoom)) ...
-            // In MaintTentRoom.OnEnter: triggers quiz.
-            
             engine.Move("west"); // Maintenance Tent (triggers quiz)
             Assert.Equal("MaintTent", player.CurrentRoom.ID);
             engine.TakeItem("Desert Key");
