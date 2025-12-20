@@ -38,7 +38,14 @@ The game uses a list-based inventory system to track items the player has collec
     *   **Error Messages**: Red
 
 ### 2.6 Win/Loss State Definitions
-*   **Victory**: The game ends when all four regions are restored and the player returns to the Aurora Control Hub. This requires completing the Solar Desert, Hydro Hub, Windy Highlands, and Volcanic Plains regions.
+*   **Victory**: The game ends when all four regions are restored and the player returns to the Aurora Control Hub.
+    *   **Conditions**:
+        *   **Location**: Player must be in the **Hub**.
+        *   **Solar Region**: `SolarFixed` flag is true (Solar Fields repaired).
+        *   **Hydro Region**: `QteComplete` flag is true (Dam Control Room fixed).
+        *   **Windy Region**: `WindyRestored` flag is true (Turbines fixed and operator spoken to).
+        *   **Geothermal Region**: `GeothermalCertified` flag is true (Quiz passed at Observatory).
+    *   **Outcome**: The game prints a congratulatory message ("CONGRATULATIONS! You have restored power to all four regions...") and the game loop terminates (`IsRunning = false`).
 *   **Game Over / Setbacks**:
     *   **QTE Failure**: Failing the Hydro QTE results in a 10-second timeout before retrying. There is no permanent "Game Over" screen.
     *   **Quiz Failure**: Answering incorrectly in the Solar Desert quiz moves the player back to the previous room, requiring them to try again. The Geothermal quiz requires 2 out of 3 correct answers to pass; incorrect answers can be retried.
