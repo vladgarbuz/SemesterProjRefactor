@@ -5,7 +5,7 @@
 An open-source, console-based text-adventure where you play an engineer trying to restore power across four regions: Solar Desert, Hydro Hub, Windy Highlands, and Volcanic Plains.
 
 ## 1. Overview
-Project Aurora is a text-based adventure game where the player acts as an engineer in the year 2075. The goal is to restore power to four regions: Solar Desert, Hydro Hub, Windy Highlands, and Volcanic Plains. The game runs in a console environment and uses a natural language parser for user input.
+Project Aurora is a text-based adventure game where the player acts as an engineer in the year 2075. The goal is to restore power to four regions: Solar Desert, Hydro Hub, Windy Highlands, and Volcanic Plains. The game runs in a console environment and uses a natural language parser for user input. test
 
 ## 2. Requirements Analysis
 
