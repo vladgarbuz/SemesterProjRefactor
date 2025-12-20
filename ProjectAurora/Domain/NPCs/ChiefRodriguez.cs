@@ -1,4 +1,5 @@
 using ProjectAurora.Data;
+using System.Linq;
 
 namespace ProjectAurora.Domain.NPCs
 {

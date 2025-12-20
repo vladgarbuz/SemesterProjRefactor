@@ -1,5 +1,6 @@
 using ProjectAurora.Data;
 using ProjectAurora.Domain;
+using System.Linq;
 
 namespace ProjectAurora.Data.Rooms
 {
@@ -7,6 +8,15 @@ namespace ProjectAurora.Data.Rooms
     {
         public GardenRoom(string id, string name, string description) : base(id, name, description)
         {
+        }
+
+        public override void OnAfterEnter(Player player, GameState state, GameEngine engine)
+        {
+            if (state.BoxVisited && !player.HasItem("code") && !this.Items.Any(i => i.Name == "code"))
+            {
+                this.AddItem(new Item("code", "A small piece of paper with the code written on it."));
+                engine.Print("You notice a small piece of paper on the ground that you didn't see before. ('take code')");
+            }
         }
 
         public override bool OnTakeItem(string itemName, Player player, GameState state, GameEngine engine)

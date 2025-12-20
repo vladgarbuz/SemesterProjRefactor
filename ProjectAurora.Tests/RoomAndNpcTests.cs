@@ -331,7 +331,7 @@ namespace ProjectAurora.Tests
             var player = new Player(new Room("Observatory", "Observatory", "desc"));
             var state = engine.State;
             
-            player.AddItem(new Item("thermal data", ""));
+            state.MarkThermalDataSubmitted();
             elena.Talk(player, state, engine.Print, engine);
             
             Assert.Contains("decades", engine.OutputMessage);
@@ -347,6 +347,7 @@ namespace ProjectAurora.Tests
             var state = engine.State;
             
             player.AddItem(new Item("permit", "A permit"));
+            state.MarkThermalDataSubmitted();
             engine.RunQuiz = (q) => q.PassThreshold; // Pass the quiz
             
             Assert.False(state.GeothermalCertified);
@@ -369,6 +370,7 @@ namespace ProjectAurora.Tests
             var state = engine.State;
             
             player.AddItem(new Item("permit", "A permit"));
+            state.MarkThermalDataSubmitted();
             engine.RunQuiz = (q) => 0; // Fail the quiz
             
             var permit = player.Inventory.First(i => i.Name == "permit");
@@ -440,7 +442,7 @@ namespace ProjectAurora.Tests
             var state = engine.State;
             
             engine.ClearOutput();
-            plant.OnEnter(player, state, engine);
+            plant.OnAfterEnter(player, state, engine);
             
             Assert.Contains("Rodriguez", engine.OutputMessage);
         }
@@ -528,7 +530,7 @@ namespace ProjectAurora.Tests
             // Code not visible before visiting metal box
             Assert.False(state.BoxVisited);
             engine.ClearOutput();
-            garden.OnEnter(player, state, engine);
+            garden.OnAfterEnter(player, state, engine);
             Assert.Empty(garden.Items);
 
             // Mark box as visited
@@ -536,7 +538,7 @@ namespace ProjectAurora.Tests
 
             // Code appears after visiting metal box
             engine.ClearOutput();
-            garden.OnEnter(player, state, engine);
+            garden.OnAfterEnter(player, state, engine);
             Assert.Single(garden.Items);
             Assert.Contains(garden.Items, i => i.Name == "code");
             Assert.Contains("piece of paper", engine.OutputMessage);
@@ -561,7 +563,7 @@ namespace ProjectAurora.Tests
             Assert.True(handled);
             Assert.True(state.FedRaccoon);
             Assert.False(player.HasItem("snack"));
-            Assert.Contains(tents.Items, i => i.Name == "control board");
+            Assert.True(player.HasItem("control board"));
             Assert.Contains("dropped the control board", engine.OutputMessage);
         }
 

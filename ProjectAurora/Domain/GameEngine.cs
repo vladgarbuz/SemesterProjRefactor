@@ -16,6 +16,7 @@ namespace ProjectAurora.Domain
         // Delegate for UI callbacks (like QTE or Quiz)
         public System.Func<ProjectAurora.Domain.IQte, bool>? RunHydroQTE { get; set; }
         public System.Func<ProjectAurora.Domain.IMultiQuestionQuiz, int>? RunQuiz { get; set; }
+        public System.Func<string>? ReadInput { get; set; }
         
         private Room _hub;
 
@@ -70,6 +71,9 @@ namespace ProjectAurora.Domain
                     {
                         Print($"You move to {Player.CurrentRoom.Name}.");
                     }
+
+                    // Trigger post-entry events
+                    Player.CurrentRoom.OnAfterEnter(Player, State, this);
 
                     // Always display the room description when the player ends up in a different room
                     Look();
