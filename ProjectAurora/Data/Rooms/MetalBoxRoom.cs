@@ -30,9 +30,8 @@ namespace ProjectAurora.Data.Rooms
                 }
 
                 // Display the prompt immediately
-                System.Console.WriteLine("Enter the code to open the metal box:");
-                System.Console.Write("> ");
-                string? userInput = System.Console.ReadLine();
+                engine.Print("Enter the code to open the metal box:");
+                string? userInput = engine.ReadInput != null ? engine.ReadInput() : System.Console.ReadLine();
                 
                 if (userInput?.Trim().Equals("Rigby", System.StringComparison.OrdinalIgnoreCase) == true)
                 {

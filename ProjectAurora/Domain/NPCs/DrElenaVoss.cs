@@ -12,7 +12,7 @@ namespace ProjectAurora.Domain.NPCs
             }
             else
             {
-                print("Dr. Elena Voss: 'I study thermal activity here. The Steam Vents show incredible heat at 2km depth! Collect thermal data from there to help our research.'");
+                print("Dr. Elena Voss: 'I study thermal activity here. The Steam Vents show incredible heat at 2km depth! Collect thermal data from there and bring it here to me to help our research.'");
             }
         }
     }

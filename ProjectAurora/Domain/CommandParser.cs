@@ -14,8 +14,6 @@ namespace ProjectAurora.Domain
             var moveCommand = new MoveCommand();
             _commands = new Dictionary<string, ICommand>
             {
-                { "go", moveCommand },
-                { "move", moveCommand },
                 { "north", moveCommand },
                 { "south", moveCommand },
                 { "east", moveCommand },
@@ -35,7 +33,6 @@ namespace ProjectAurora.Domain
 
             _directions = new HashSet<string>
             {
-                // Removed 'inside' and 'outside' in favor of using cardinals for all moves
                 "north", "south", "east", "west", "up", "down"
             };
         }

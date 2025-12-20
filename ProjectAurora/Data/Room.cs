@@ -23,6 +23,11 @@ namespace ProjectAurora.Data
             return true;
         }
 
+        // Called after the player has successfully entered the room.
+        public virtual void OnAfterEnter(ProjectAurora.Data.Player player, ProjectAurora.Data.GameState state, ProjectAurora.Domain.GameEngine engine)
+        {
+        }
+
         // Called when a player uses an item in this room; return true if the item use was handled.
         public virtual bool OnUseItem(ProjectAurora.Data.Item item, ProjectAurora.Data.Player player, ProjectAurora.Data.GameState state, ProjectAurora.Domain.GameEngine engine)
         {

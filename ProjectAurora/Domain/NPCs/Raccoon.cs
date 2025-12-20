@@ -9,7 +9,7 @@ namespace ProjectAurora.Domain.NPCs
             if (!state.FedRaccoon)
             {
                 // Hint the player the raccoon might want a snack if it hasn't been fed yet
-                print("You found a raccoon! It seems to be playing with a control board. It looks hungry — maybe try feeding it a snack?");
+                print("You found a raccoon! It seems to be playing with a control board. It looks hungry — maybe try feeding it a snack? ('use snack')");
             }
             else
             {

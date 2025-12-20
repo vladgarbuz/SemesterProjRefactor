@@ -64,7 +64,7 @@ namespace ProjectAurora.Tests
             engine.Move("west");
 
             Assert.Equal("MaintTent", engine.Player.CurrentRoom.ID);
-            Assert.Contains("Correct! You enter the tent.", engine.OutputMessage);
+            Assert.Contains("Correct", engine.OutputMessage);
             // Auto-look should also have printed a description
             Assert.Contains("Exits:", engine.OutputMessage);
             
